@@ -28,9 +28,12 @@ class ApplianceController extends Controller
             ],
             'date_in' => 'nullable|date',
             'appliance_size' => 'nullable|in:Small,Medium,Large',
+            'status' => 'nullable|string|max:50',
+            'warranty_end' => 'nullable|date',
         ]);
 
         $validated['customer_id'] = $customer->id;
+        $validated['status'] = $validated['status'] ?? 'Active';
 
         Appliance::create($validated);
 
@@ -57,6 +60,8 @@ class ApplianceController extends Controller
             ],
             'date_in' => 'nullable|date',
             'appliance_size' => 'nullable|in:Small,Medium,Large',
+            'status' => 'nullable|string|max:50',
+            'warranty_end' => 'nullable|date',
         ]);
 
         $appliance->update($validated);

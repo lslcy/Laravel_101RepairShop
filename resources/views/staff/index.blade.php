@@ -3,11 +3,11 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">User Management</h2>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">User Management</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Manage team members and their roles</p>
             </div>
             <a href="{{ route('staff.create') }}"
-                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-900 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                 <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Search -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm">
+        <div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
             <form method="GET" action="{{ route('staff.index') }}" class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Table -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50 dark:bg-slate-700/50">
@@ -65,7 +65,7 @@
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200" id="staffTableBody">
                         @if(count($staff) > 0)
                             @foreach($staff as $member)
-                            <tr class="hover:bg-gray-50 dark:bg-slate-700/50 transition-colors">
+                            <tr class="table-row-hover">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                     #{{ $member->id }}
                                 </td>

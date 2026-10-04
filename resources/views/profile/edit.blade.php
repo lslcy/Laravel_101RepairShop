@@ -64,7 +64,7 @@
 
 
             <!-- Update Profile Info -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl border border-gray-100 dark:border-gray-700 p-6">
+            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
                 @include('profile.partials.update-profile-information-form')
             </div>
         </div>
@@ -73,11 +73,11 @@
         <div x-show="tab === 'security'" style="display: none;" class="space-y-6">
             <!-- Update Password -->
             @if(auth()->user()->role !== 'Administrator')
-                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl border border-gray-100 dark:border-gray-700 p-6">
+                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
                     @include('profile.partials.update-password-form')
                 </div>
             @else
-                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl border border-gray-100 dark:border-gray-700 p-6">
+                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
                     <header class="mb-4">
                         <h2 class="text-lg font-bold text-gray-900 dark:text-white">Update Password</h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -88,7 +88,7 @@
             @endif
 
             <!-- Two-Factor Auth (Placeholder) -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl border border-gray-100 dark:border-gray-700 p-6">
+            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
                 <header class="mb-4">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white">Two-Factor Authentication</h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security to your
@@ -120,7 +120,7 @@
 
         <!-- NOTIFICATIONS TAB -->
         <div x-show="tab === 'notifications'" style="display: none;" class="space-y-6">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl border border-gray-100 dark:border-gray-700 p-6">
+            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
                 <header class="mb-4">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white">Email Notifications</h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Get notified about important updates.</p>
@@ -160,7 +160,7 @@
         <!-- PRIVACY TAB -->
         <div x-show="tab === 'privacy'" style="display: none;" class="space-y-6">
             <!-- Delete Account -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl border border-red-100 dark:border-red-900 p-6">
+            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-red-100 dark:border-red-900 p-6">
                 @include('profile.partials.delete-user-form')
             </div>
         </div>

@@ -2,7 +2,7 @@
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Add New Customer</h2>
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Add New Customer</h2>
             <a href="{{ route('customers.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <form action="{{ route('customers.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
@@ -194,7 +194,7 @@
                                         class="block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                         placeholder="Search address on map (e.g., SM City Cebu)...">
                                     <button type="button" @click="searchAddress()"
-                                        class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 dark:blue-600 transition-colors flex items-center gap-1 whitespace-nowrap">
+                                        class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1 whitespace-nowrap">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>

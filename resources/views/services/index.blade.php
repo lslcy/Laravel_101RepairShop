@@ -3,11 +3,11 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Service Reports</h2>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Service Reports</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Track and manage all service requests</p>
             </div>
             @if(auth()->user()->role === 'Administrator')
-            <a href="{{ route('services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-900 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+            <a href="{{ route('services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                 <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -17,7 +17,7 @@
         </div>
 
         <!-- Filters & Search -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm print:hidden">
+        <div class="ui-card p-4 print:hidden">
             <form method="GET" action="{{ route('services.index') }}" class="flex flex-col md:flex-row gap-4" id="filterForm">
                 
                 <!-- Search -->
@@ -70,7 +70,7 @@
         </div>
 
         <!-- Table -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50 dark:bg-slate-700/50">
@@ -100,7 +100,7 @@
                     </thead>
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200" id="servicesTableBody">
                         @forelse($services as $service)
-                        <tr class="hover:bg-gray-50 dark:bg-slate-700/50 transition-colors" data-status="{{ $service->status }}">
+                        <tr class="table-row-hover" data-status="{{ $service->status }}">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                 #{{ $service->id }}
                             </td>

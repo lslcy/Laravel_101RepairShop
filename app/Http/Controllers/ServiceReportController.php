@@ -111,13 +111,13 @@ class ServiceReportController extends Controller
         $services = \App\Models\ServiceReport::with(['customer', 'appliance', 'details'])
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
-                    $query->where('customer_name', 'like', "%$search%")
-                          ->orWhere('id', 'like', "%$search%");
+                    $query->where('customer_name', 'ilike', "%$search%")
+                          ->orWhere('id', 'ilike', "%$search%");
                 });
             })
             ->when($status, function ($q) use ($status) {
                 if ($status === 'In Progress') {
-                    $q->whereIn('status', ['Waiting for Parts', 'Under Repair']);
+                    $q->whereIn('status', \App\Models\ServiceReport::IN_PROGRESS_STATUSES);
                 } else {
                     $q->where('status', $status);
                 }
@@ -149,7 +149,7 @@ class ServiceReportController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'appliance_id' => 'required|exists:appliances,id',
             'date_in' => 'required|date',
-            'status' => 'required|string',
+            'status' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\ServiceReport::STATUSES)],
             'findings' => 'nullable|string',
             'problem_desc' => 'required|string',
             'labor_cost' => 'nullable|numeric',
@@ -238,9 +238,10 @@ class ServiceReportController extends Controller
         $userRole = auth()->user()->role;
         $rules = [
             'customer_id' => 'required|exists:customers,id',
-            'appliance_id' => 'required|exists:appliances,id',
+            // Reports booked from the Flutter app may not be linked to an appliance yet.
+            'appliance_id' => 'nullable|exists:appliances,id',
             'date_in' => 'required|date',
-            'status' => 'required|string',
+            'status' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\ServiceReport::STATUSES)],
             'findings' => 'nullable|string',
             'problem_desc' => 'required|string',
             'labor_cost' => 'nullable|numeric',
@@ -262,12 +263,16 @@ class ServiceReportController extends Controller
 
         $validated = $request->validate($rules);
 
+        if (array_key_exists('appliance_id', $validated) && $validated['appliance_id'] === '') {
+            $validated['appliance_id'] = null;
+        }
+
         // Preserve missing attributes for disabled HTML form fields
         if ($userRole === 'Technician') {
             $validated['customer_id'] = $service->customer_id;
             $validated['appliance_id'] = $service->appliance_id;
             $validated['date_in'] = $service->date_in;
-            $validated['problem_desc'] = $service->details ? $service->details->complaint : '';
+            $validated['problem_desc'] = $service->details?->complaint ?: (string) $service->findings;
             $validated['labor_cost'] = $service->details ? $service->details->labor : 0;
             $validated['dealer'] = $service->dealer;
             $validated['dop'] = $service->dop;
@@ -294,7 +299,7 @@ class ServiceReportController extends Controller
         ServiceDetail::updateOrCreate(
             ['report_id' => $service->id],
             [
-                'complaint' => $request->problem_desc,
+                'complaint' => $validated['problem_desc'],
                 'labor' => $labor,
                 'parts_total_charge' => $partsTotalCost,
                 'miscellaneous_cost' => $miscCost,

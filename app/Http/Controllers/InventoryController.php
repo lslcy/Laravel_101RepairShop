@@ -13,8 +13,8 @@ class InventoryController extends Controller
 
         $parts = \App\Models\Part::when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%$search%")
-                          ->orWhere('part_no', 'like', "%$search%");
+                    $query->where('name', 'ilike', "%$search%")
+                          ->orWhere('part_no', 'ilike', "%$search%");
                 });
             })
             ->when($status, function ($q) use ($status) {

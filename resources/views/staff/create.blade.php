@@ -2,7 +2,7 @@
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Add New User</h2>
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Add New User</h2>
             <a href="{{ route('staff.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <!-- Info Alert -->
                 <div class="mb-6 bg-blue-50 border-l-4 border-blue-400 p-4">
@@ -27,7 +27,7 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <p class="text-sm text-blue-700 dark:blue-600">
+                            <p class="text-sm text-blue-700">
                                 Please fill out the user details below.
                             </p>
                         </div>

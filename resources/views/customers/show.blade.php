@@ -3,12 +3,12 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $customer->first_name }} {{ $customer->last_name }}</h2>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">{{ $customer->first_name }} {{ $customer->last_name }}</h2>
                 <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Customer Profile</p>
             </div>
             <div class="flex space-x-3">
                 <a href="{{ route('customers.index') }}"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:bg-slate-700/50 transition-colors">
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-slate-800 table-row-hover">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -16,7 +16,7 @@
                 </a>
                 @if(auth()->user()->role === 'Administrator')
                     <a href="{{ route('customers.edit', $customer) }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:blue-600 transition-colors">
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -29,7 +29,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Customer Info Card -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div class="ui-card overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Contact Information</h3>
                 </div>
@@ -73,7 +73,7 @@
                     </div>
                     <div class="pt-3 border-t border-gray-100 dark:border-slate-700 grid grid-cols-2 gap-3 text-center">
                         <div class="bg-blue-50 rounded-lg p-3">
-                            <p class="text-2xl font-bold text-blue-700 dark:blue-600">{{ $customer->appliances->count() }}</p>
+                            <p class="text-2xl font-bold text-blue-700">{{ $customer->appliances->count() }}</p>
                             <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Appliances</p>
                         </div>
                         <div class="bg-green-50 rounded-lg p-3">
@@ -87,7 +87,7 @@
             <!-- Appliances & Service History -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Appliances -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                <div class="ui-card overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Appliances ({{ $customer->appliances->count() }})</h3>
                     </div>
@@ -136,7 +136,7 @@
                 </div>
 
                 <!-- Service History -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                <div class="ui-card overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Service History ({{ $customer->serviceReports->count() }})</h3>
                     </div>

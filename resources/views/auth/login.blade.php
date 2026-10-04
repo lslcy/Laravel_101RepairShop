@@ -40,25 +40,27 @@
     </script>
 </head>
 
-<body class="font-sans antialiased text-gray-900 bg-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-8 transition-colors duration-200">
+<body
+    class="font-sans antialiased text-gray-900 bg-gray-50 flex items-center justify-center min-h-screen p-4 sm:p-8 transition-colors duration-200">
 
     <div
-        class="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] transition-colors duration-200">
+        class="w-full max-w-5xl bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col md:flex-row min-h-[560px]">
 
         <!-- Left Pane: Login Form -->
-        <div class="w-full md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white relative transition-colors duration-200">
+        <div
+            class="w-full md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white relative transition-colors duration-200">
 
             <div class="max-w-md w-full mx-auto">
                 <!-- Logo & Header -->
                 <div class="text-center mb-10">
                     <!-- Light Mode Logo (Blue) -->
                     <img src="{{ asset('img/repairservicelogoblue.png') }}" alt="101 Repair Shop Logo"
-                        class="h-32 md:h-40 mx-auto object-contain mb-4 block">
+                        class="h-24 md:h-28 mx-auto object-contain mb-4 block">
                     <!-- Dark Mode Logo (Gray/Red) -->
                     <img src="{{ asset('img/repairservicelogogray.png') }}" alt="101 Repair Shop Logo"
                         class="h-32 md:h-40 mx-auto object-contain mb-4 hidden">
-                    <h2 class="text-2xl font-bold text-gray-900 leading-tight tracking-tight">101 Repair Service</h2>
-                    <p class="mt-2 text-sm text-gray-500 font-medium tracking-wide">Sign in to your account</p>
+                    <h2 class="text-xl font-semibold text-gray-900 leading-tight">101 Repair Service</h2>
+                    <p class="mt-1 text-sm text-gray-500">Sign in to your account</p>
                 </div>
 
                 <!-- Session Status -->
@@ -88,16 +90,20 @@
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
                                 <!-- Eye open (password hidden) -->
-                                <svg x-show="!showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg x-show="!showPassword" class="h-5 w-5" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                    </path>
                                 </svg>
                                 <!-- Eye off (password shown) -->
-                                <svg x-show="showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;">
+                                <svg x-show="showPassword" class="h-5 w-5" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" style="display:none;">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21">
+                                    </path>
                                 </svg>
                             </button>
                         </div>
@@ -125,7 +131,7 @@
                     <!-- Submit Button -->
                     <div class="pt-2">
                         <button type="submit"
-                            class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[#1a56db] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-colors">
+                            class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-colors">
                             Sign in
                         </button>
                     </div>

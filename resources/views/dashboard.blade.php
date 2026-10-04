@@ -5,7 +5,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Weekly Customers -->
             <a href="{{ route('customers.index') }}"
-                class="block bg-[#fafafa] dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300">
+                class="block bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between transition-colors">
                 <div class="flex justify-between items-start">
                     <div class="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,14 +20,14 @@
                     </span>
                 </div>
                 <div class="mt-4">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $weeklyCustomers }}</h3>
+                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $weeklyCustomers }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Weekly Customers</p>
                 </div>
             </a>
 
             <!-- Weekly Income -->
             <a href="{{ route('transactions.index') }}"
-                class="block bg-[#fafafa] dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300">
+                class="block bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between transition-colors">
                 <div class="flex justify-between items-start">
                     <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-700 dark:text-green-400">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,16 +42,18 @@
                     </span>
                 </div>
                 <div class="mt-4">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">₱{{ number_format($weeklyIncome, 2) }}</h3>
+                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">₱{{ number_format($weeklyIncome, 2) }}
+                    </h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Weekly Service Income</p>
                 </div>
             </a>
 
             <!-- Weekly Services -->
             <a href="{{ route('services.index') }}"
-                class="block bg-[#fafafa] dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300">
+                class="block bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between transition-colors">
                 <div class="flex justify-between items-start">
-                    <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-700 dark:text-purple-400">
+                    <div
+                        class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-700 dark:text-purple-400">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
@@ -66,16 +68,17 @@
                     </span>
                 </div>
                 <div class="mt-4">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $weeklyServices }}</h3>
+                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $weeklyServices }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Weekly Total Services</p>
                 </div>
             </a>
 
             <!-- Growth Rate -->
             <a href="{{ route('transactions.index') }}"
-                class="block bg-[#fafafa] dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300">
+                class="block bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex flex-col justify-between transition-colors">
                 <div class="flex justify-between items-start">
-                    <div class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-700 dark:text-orange-400">
+                    <div
+                        class="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-700 dark:text-orange-400">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
@@ -87,7 +90,8 @@
                     </span>
                 </div>
                 <div class="mt-4">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $overallGrowth >= 0 ? '+' : '' }}{{ $overallGrowth }}%</h3>
+                    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                        {{ $overallGrowth >= 0 ? '+' : '' }}{{ $overallGrowth }}%</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Growth Rate</p>
                 </div>
             </a>
@@ -96,15 +100,18 @@
         <!-- Charts & Activity Row -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Popular Service Types (flip card) -->
-            <div class="bg-[#fafafa] dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300" x-data="{ flipped: false }">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors"
+                x-data="{ flipped: false }">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Popular Service Types</h3>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Popular Service Types</h3>
                     <!-- Flip toggle button -->
                     <button @click="flipped = !flipped"
                         class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-blue-300 transition-all"
                         :title="flipped ? 'Switch to Donut Chart' : 'Switch to Line Chart'">
-                        <svg class="w-4 h-4 transition-transform duration-500" :class="flipped ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        <svg class="w-4 h-4 transition-transform duration-500" :class="flipped ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                         <span x-text="flipped ? 'Donut' : 'Line'"></span>
                     </button>
@@ -117,18 +124,23 @@
                         style="transform-style: preserve-3d;">
 
                         <!-- FRONT: Donut Chart -->
-                        <div class="absolute inset-0 flex flex-col" style="backface-visibility: hidden; -webkit-backface-visibility: hidden;">
+                        <div class="absolute inset-0 flex flex-col"
+                            style="backface-visibility: hidden; -webkit-backface-visibility: hidden;">
                             <div class="flex-1 flex items-center justify-center relative">
                                 <canvas id="serviceTypesChart"></canvas>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                    <span class="text-3xl font-bold text-gray-900 dark:text-white" id="popularServicePercentage">
+                                <div
+                                    class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span class="text-2xl font-semibold text-gray-900 dark:text-white"
+                                        id="popularServicePercentage">
                                         @if(array_sum($chartData['donutData']) > 0)
                                             {{ round(($chartData['donutData'][0] / array_sum($chartData['donutData'])) * 100) }}%
                                         @else
                                             0%
                                         @endif
                                     </span>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider" id="popularServiceLabel">
+                                    <span
+                                        class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider"
+                                        id="popularServiceLabel">
                                         {{ strtoupper($chartData['donutLabels'][0] ?? 'N/A') }}
                                     </span>
                                 </div>
@@ -136,7 +148,9 @@
                             <div class="mt-2 flex justify-center space-x-6">
                                 @php $chartColors = ['bg-orange-500', 'bg-green-500', 'bg-blue-500']; @endphp
                                 @foreach($chartData['donutLabels'] as $index => $label)
-                                    <div class="flex items-center"><span class="w-3 h-3 rounded-full {{ $chartColors[$index % 3] }} mr-2"></span><span class="text-sm text-gray-500 dark:text-gray-400">{{ $label }}</span></div>
+                                    <div class="flex items-center"><span
+                                            class="w-3 h-3 rounded-full {{ $chartColors[$index % 3] }} mr-2"></span><span
+                                            class="text-sm text-gray-500 dark:text-gray-400">{{ $label }}</span></div>
                                 @endforeach
                             </div>
                         </div>
@@ -147,139 +161,166 @@
                             <div class="flex-1 flex items-center justify-center">
                                 <canvas id="serviceTypesLineChart"></canvas>
                             </div>
-                            <p class="text-center text-xs text-gray-400 dark:text-gray-500 pb-2 mt-1">Service type trends over the last 6 months</p>
+                            <p class="text-center text-xs text-gray-400 dark:text-gray-500 pb-2 mt-1">Service type
+                                trends over the last 6 months</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Recent Activity -->
-            <div class="bg-[#fafafa] dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col gap-6">
-                <div class="h-[48px] flex items-center justify-between">
-                    <div class="flex flex-col gap-[4px]">
-                        <h3 class="text-[18px] leading-[28px] font-bold text-[#101828] dark:text-white">Recent Activity</h3>
-                        <p class="text-[12px] leading-[16px] text-[#6a7282] dark:text-gray-400">Latest service updates</p>
+            <div
+                class="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors flex flex-col gap-6">
+                <div class="min-h-[48px] flex items-center justify-between">
+                    <div class="flex flex-col gap-1">
+                        <h3 class="text-base font-semibold text-gray-900 dark:text-white">Recent Activity
+                        </h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Latest service updates
+                        </p>
                     </div>
                     <a href="{{ route('services.index') }}"
-                        class="inline-flex items-center gap-[8px] text-[12px] leading-[16px] font-semibold text-[#155dfc] dark:text-blue-400">
+                        class="inline-flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400">
                         View All
-                        <img class="w-[16px] h-[16px] dark:invert dark:opacity-75" alt="" src="{{ asset('assets/icons/arrow-right-blue.svg') }}" />
+                        <img class="w-4 h-4 dark:invert dark:opacity-75" alt=""
+                            src="{{ asset('assets/icons/arrow-right-blue.svg') }}" />
                     </a>
                 </div>
 
-                <div class="flex flex-col gap-[16px]">
+                <div class="flex flex-col gap-4">
                     @if(count($recentServices) > 0)
-                    @foreach($recentServices as $service)
-                    @php
-                        $status = strtolower($service->status ?? '');
-                        if (str_contains($status, 'complete')) {
-                            $pillBg = 'bg-[#dcfce7] dark:bg-green-900/30';
-                            $pillText = 'text-[#008236] dark:text-green-400';
-                        } elseif (str_contains($status, 'wait')) {
-                            $pillBg = 'bg-[#fef3c6] dark:bg-orange-900/30';
-                            $pillText = 'text-[#bb4d00] dark:text-orange-400';
-                        } else {
-                            $pillBg = 'bg-[#dbeafe] dark:bg-blue-900/30';
-                            $pillText = 'text-[#1447e6] dark:text-blue-400';
-                        }
-                        $titleCustomer = $service->customer_name ?: 'Unknown Customer';
-                        $titleAppliance = $service->appliance_name ?? optional($service->appliance)->name ?? 'Service';
-                    @endphp
-                    <div class="relative h-[68px]">
-                        <div class="relative h-full {{ $loop->last ? '' : 'border-l-2 border-[#e5e7eb] dark:border-slate-700' }}">
-                            <div class="absolute left-[28px] top-0 h-[52px] flex flex-col gap-[8px]">
-                                <div class="h-[20px]">
-                                    <p class="text-[14px] leading-[20px] font-semibold text-[#101828] dark:text-white truncate">
-                                        {{ $titleCustomer }} - {{ $titleAppliance }}
-                                    </p>
-                                </div>
-                                <div class="h-[24px] flex items-center gap-[8px]">
-                                    <span class="h-[24px] px-[10px] py-[4px] rounded-[14px] inline-flex items-center justify-center {{ $pillBg }}">
-                                        <span class="text-[12px] leading-[16px] font-semibold {{ $pillText }}">
-                                            {{ $service->status ?? 'Unknown' }}
-                                        </span>
-                                    </span>
-                                    <span class="text-[12px] leading-[16px] font-medium text-[#6a7282] dark:text-gray-400">
-                                        {{ optional($service->created_at)->diffForHumans() }}
-                                    </span>
+                        @foreach($recentServices as $service)
+                            @php
+                                $status = strtolower($service->status ?? '');
+                                if (str_contains($status, 'complete')) {
+                                    $pillBg = 'bg-green-50 dark:bg-green-900/30';
+                                    $pillText = 'text-green-700 dark:text-green-400';
+                                } elseif (str_contains($status, 'wait')) {
+                                    $pillBg = 'bg-amber-50 dark:bg-orange-900/30';
+                                    $pillText = 'text-amber-700 dark:text-orange-400';
+                                } else {
+                                    $pillBg = 'bg-blue-50 dark:bg-blue-900/30';
+                                    $pillText = 'text-blue-700 dark:text-blue-400';
+                                }
+                                $titleCustomer = $service->customer_name ?: 'Unknown Customer';
+                                $titleAppliance = $service->appliance_name ?? optional($service->appliance)->name ?? 'Service';
+                            @endphp
+                            <div class="relative min-h-[68px]">
+                                <div
+                                    class="relative h-full {{ $loop->last ? '' : 'border-l-2 border-[#e5e7eb] dark:border-slate-700' }}">
+                                    <div class="absolute left-[28px] top-0  flex flex-col gap-2">
+                                        <div class="">
+                                            <p
+                                                class="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                                {{ $titleCustomer }} - {{ $titleAppliance }}
+                                            </p>
+                                        </div>
+                                        <div class=" flex items-center gap-2">
+                                            <span
+                                                class=" px-2.5 py-1 rounded-full inline-flex items-center justify-center {{ $pillBg }}">
+                                                <span class="text-xs font-semibold {{ $pillText }}">
+                                                    {{ $service->status ?? 'Unknown' }}
+                                                </span>
+                                            </span>
+                                            <span
+                                                class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                                {{ optional($service->created_at)->diffForHumans() }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-blue-500 border-4 border-white dark:border-slate-800"></span>
                                 </div>
                             </div>
-                            <span class="absolute left-[-9px] top-0 w-[16px] h-[16px] rounded-full bg-[#2b7fff] border-[4px] border-white dark:border-slate-800"></span>
-                        </div>
-                    </div>
-                    @endforeach
+                        @endforeach
                     @else
-                    <div class="text-[12px] leading-[16px] text-[#6a7282] dark:text-gray-400">No recent activity.</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">No recent activity.</div>
                     @endif
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-        <!-- Additional Dashboard Information -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-            <!-- Low Stock Parts -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 flex flex-col gap-4 hover:shadow-md transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Low Stock Alerts</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Inventory items needing restock</p>
-                    </div>
-                    @if(Route::has('parts.index'))
-                    <a href="{{ route('parts.index') }}" class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">View Inventory</a>
-                    @endif
+    <!-- Additional Dashboard Information -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Low Stock Parts -->
+        <div
+            class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 flex flex-col gap-4 transition-colors">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Low Stock Alerts</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Inventory items needing restock</p>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700/50">
-                        <thead>
-                            <tr>
-                                <th class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Part Name</th>
-                                <th class="text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Stock</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-slate-700/50">
-                            @forelse($lowStockParts ?? collect() as $part)
+                @if(Route::has('parts.index'))
+                    <a href="{{ route('parts.index') }}"
+                        class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">View Inventory</a>
+                @endif
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700/50">
+                    <thead>
+                        <tr>
+                            <th
+                                class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">
+                                Part Name</th>
+                            <th
+                                class="text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">
+                                Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-slate-700/50">
+                        @forelse($lowStockParts ?? collect() as $part)
                             <tr>
                                 <td class="py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $part->name }}</td>
                                 <td class="py-3 text-sm text-right text-red-600 font-bold">
                                     {{ $part->quantity_stock }}
                                 </td>
                             </tr>
-                            @empty
+                        @empty
                             <tr>
-                                <td colspan="2" class="py-4 text-center text-sm text-gray-500 dark:text-gray-400">Inventory levels are healthy.</td>
+                                <td colspan="2" class="py-4 text-center text-sm text-gray-500 dark:text-gray-400">Inventory
+                                    levels are healthy.</td>
                             </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- Recent Transactions -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 flex flex-col gap-4 hover:shadow-md transition-all duration-300">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Transactions</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Latest paid and unpaid invoices</p>
-                    </div>
-                    @if(Route::has('transactions.index'))
-                    <a href="{{ route('transactions.index') }}" class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">View All</a>
-                    @endif
+        <!-- Recent Transactions -->
+        <div
+            class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 flex flex-col gap-4 transition-colors">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Recent Transactions</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Latest paid and unpaid invoices</p>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700/50">
-                        <thead>
+                @if(Route::has('transactions.index'))
+                    <a href="{{ route('transactions.index') }}"
+                        class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">View All</a>
+                @endif
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700/50">
+                    <thead>
+                        <tr>
+                            <th
+                                class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">
+                                Customer</th>
+                            <th
+                                class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">
+                                Amount</th>
+                            <th
+                                class="text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">
+                                Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-slate-700/50">
+                        @forelse($recentTransactions ?? collect() as $transaction)
                             <tr>
-                                <th class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Customer</th>
-                                <th class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Amount</th>
-                                <th class="text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider py-2">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-slate-700/50">
-                            @forelse($recentTransactions ?? collect() as $transaction)
-                            <tr>
-                                <td class="py-3 text-sm font-medium text-gray-900 dark:text-white">{{ optional($transaction->report)->customer_name ?? 'Unknown' }}</td>
-                                <td class="py-3 text-sm text-gray-900 dark:text-gray-300">₱{{ number_format($transaction->total_amount, 2) }}</td>
+                                <td class="py-3 text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ optional($transaction->report)->customer_name ?? 'Unknown' }}</td>
+                                <td class="py-3 text-sm text-gray-900 dark:text-gray-300">
+                                    ₱{{ number_format($transaction->total_amount, 2) }}</td>
                                 <td class="py-3 text-sm text-right">
                                     @php
                                         $statusClass = match ($transaction->payment_status) {
@@ -289,25 +330,27 @@
                                             default => 'bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-slate-300 border dark:border-slate-600',
                                         };
                                     @endphp
-                                    <span class="px-2 py-1 text-[10px] font-semibold rounded-full {{ $statusClass }}">{{ $transaction->payment_status }}</span>
+                                    <span
+                                        class="px-2 py-1 text-[10px] font-semibold rounded-full {{ $statusClass }}">{{ $transaction->payment_status }}</span>
                                 </td>
                             </tr>
-                            @empty
+                        @empty
                             <tr>
-                                <td colspan="3" class="py-4 text-center text-sm text-gray-500 dark:text-gray-400">No recent transactions.</td>
+                                <td colspan="3" class="py-4 text-center text-sm text-gray-500 dark:text-gray-400">No recent
+                                    transactions.</td>
                             </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Chart.js Script -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // --- DONUT CHART ---
             const ctx = document.getElementById('serviceTypesChart');
             if (ctx) {
@@ -333,14 +376,14 @@
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: function(context) {
+                                    label: function (context) {
                                         return context.label + ': ' + context.raw + '%';
                                     }
                                 }
                             }
                         },
                         cutout: '75%',
-                        onHover: function(event, activeElements) {
+                        onHover: function (event, activeElements) {
                             if (activeElements.length > 0) {
                                 const index = activeElements[0].index;
                                 const value = this.data.datasets[0].data[index];

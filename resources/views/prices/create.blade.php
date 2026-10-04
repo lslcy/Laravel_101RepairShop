@@ -2,7 +2,7 @@
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Add Service Price</h2>
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Add Service Price</h2>
             <a href="{{ route('prices.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <form action="{{ route('prices.store') }}" method="POST" class="space-y-6">
                     @csrf

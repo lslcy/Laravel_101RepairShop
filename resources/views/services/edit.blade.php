@@ -190,10 +190,10 @@
                         <!-- Appliance -->
                         <div>
                             <label for="appliance_id" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Appliance</label>
-                            <select name="appliance_id" id="appliance_id" x-model="selectedApplianceId" required {{ $techDisabled }}
+                            <select name="appliance_id" id="appliance_id" x-model="selectedApplianceId" {{ $service->appliance_id ? 'required' : '' }} {{ $techDisabled }}
                                 class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm disabled:bg-gray-100 dark:bg-slate-700 disabled:cursor-not-allowed"
                                 :disabled="!customerAppliances.length || '{{ $techDisabled }}' === 'disabled'">
-                                <option value="">-- Select Appliance --</option>
+                                <option value="">{{ $service->appliance_id ? '-- Select Appliance --' : '-- Not linked (booked from mobile app) --' }}</option>
                                 <template x-for="app in customerAppliances" :key="app.id">
                                     <option :value="app.id"
                                         x-text="app.product + ' - ' + app.brand + (app.model_no ? ' ('+app.model_no+')' : '')">
@@ -350,7 +350,7 @@
                         <div class="md:col-span-2">
                             <label for="problem_desc" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Problem Description<span class="text-red-500">*</span></label>
                             <textarea id="problem_desc" name="problem_desc" rows="3" required {{ $techDisabled }}
-                                class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm disabled:bg-gray-100 dark:bg-slate-700 dark:text-white disabled:cursor-not-allowed">{{ old('problem_desc', $service->details ? $service->details->complaint : '') }}</textarea>
+                                class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm disabled:bg-gray-100 dark:bg-slate-700 dark:text-white disabled:cursor-not-allowed">{{ old('problem_desc', $service->details?->complaint ?: $service->findings) }}</textarea>
                             @error('problem_desc')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -614,6 +614,7 @@
                             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg disabled:bg-gray-100 dark:bg-slate-700 disabled:cursor-not-allowed">
                             <option value="Pending" {{ old('status', $service->status) == 'Pending' ? 'selected' : '' }}>
                                 Pending</option>
+                            <option value="In Progress" {{ old('status', $service->status) == 'In Progress' ? 'selected' : '' }}>In Progress</option>
                             <option value="Waiting for Parts" {{ old('status', $service->status) == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
                             <option value="Under Repair" {{ old('status', $service->status) == 'Under Repair' ? 'selected' : '' }}>Under Repair</option>
                             <option value="Completed" {{ old('status', $service->status) == 'Completed' ? 'selected' : '' }}>Completed</option>

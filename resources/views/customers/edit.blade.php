@@ -2,7 +2,7 @@
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Customer</h2>
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Edit Customer</h2>
             <a href="{{ route('customers.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <form action="{{ route('customers.update', $customer) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
@@ -126,6 +126,27 @@
                             @enderror
                         </div>
 
+                        <!-- Mobile App Account (Supabase Auth) -->
+                        <div class="md:col-span-2">
+                            <label for="auth_id" class="block text-sm font-medium text-gray-700 dark:text-slate-200">
+                                Mobile App Account ID
+                                @if($customer->auth_id)
+                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Linked</span>
+                                @else
+                                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300">Not linked</span>
+                                @endif
+                            </label>
+                            <input type="text" name="auth_id" id="auth_id" value="{{ old('auth_id', $customer->auth_id) }}"
+                                class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm font-mono"
+                                placeholder="e.g. 3f1c2a9e-0000-0000-0000-000000000000">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">
+                                The customer's Supabase Auth user ID. It is filled automatically when the customer signs in on the mobile app with the same email. Clear it to unlink the account.
+                            </p>
+                            @error('auth_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Address with Map Search -->
                         <div class="md:col-span-2" x-data="{
                             mapInstance: null,
@@ -202,7 +223,7 @@
                                         class="block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                         placeholder="Search address on map (e.g., SM City Cebu)...">
                                     <button type="button" @click="searchAddress()"
-                                        class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 dark:blue-600 transition-colors flex items-center gap-1 whitespace-nowrap">
+                                        class="px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-1 whitespace-nowrap">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>
@@ -246,7 +267,7 @@
                             Cancel
                         </a>
                         <button type="submit"
-                            class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                            class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                             Update Customer
                         </button>
                     </div>
@@ -255,7 +276,7 @@
         </div>
 
         <!-- Appliance Information Card -->
-        <div x-data="{ editModal: false, editAppId: null }" class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden mt-6">
+        <div x-data="{ editModal: false, editAppId: null }" class="ui-card overflow-hidden mt-6">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Customer Appliances</h3>
                 
@@ -322,7 +343,7 @@
                         <div x-show="editModal && editAppId === {{ $app->id }}" class="fixed inset-0 z-[110] overflow-y-auto" style="display:none;" x-transition>
                             <div class="flex min-h-screen items-center justify-center px-4">
                                 <div class="fixed inset-0 bg-black/40" @click="editModal = false"></div>
-                                <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl z-10 p-6">
+                                <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-lg w-full max-w-2xl z-10 p-6">
                                     <div class="flex justify-between items-center mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
                                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">Edit Appliance</h3>
                                         <button type="button" @click="editModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -365,6 +386,20 @@
                                             <div>
                                                 <label class="block text-xs font-medium text-gray-700 dark:text-slate-200">Date Received</label>
                                                 <input type="date" name="date_in" value="{{ old('date_in', $app->date_in ? \Carbon\Carbon::parse($app->date_in)->format('Y-m-d') : '') }}" required class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 dark:text-slate-200">Status</label>
+                                                @php $appStatuses = array_unique(array_filter(array_merge(\App\Models\Appliance::STATUSES, [$app->status]))); @endphp
+                                                <select name="status" class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                                    @foreach($appStatuses as $st)
+                                                        <option value="{{ $st }}" {{ old('status', $app->status ?? 'Active') == $st ? 'selected' : '' }}>{{ $st }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-gray-700 dark:text-slate-200">Warranty End</label>
+                                                <input type="date" name="warranty_end" value="{{ old('warranty_end', $app->warranty_end ? \Carbon\Carbon::parse($app->warranty_end)->format('Y-m-d') : '') }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                                <p class="mt-1 text-[11px] text-gray-400">Set automatically when a transaction is paid.</p>
                                             </div>
                                         </div>
                                         <div class="flex justify-end gap-3 mt-4">
@@ -433,11 +468,20 @@
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                                 @error('date_in')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                             </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-slate-200">Status</label>
+                                <select name="status" class="mt-1 block w-full rounded-md border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                    @foreach(\App\Models\Appliance::STATUSES as $st)
+                                        <option value="{{ $st }}" {{ old('status', 'Active') == $st ? 'selected' : '' }}>{{ $st }}</option>
+                                    @endforeach
+                                </select>
+                                @error('status')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+                            </div>
                         </div>
                         
                         <div class="flex justify-end">
                             <button type="submit"
-                                class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                 Add Appliance
                             </button>
                         </div>

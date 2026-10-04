@@ -11,6 +11,7 @@ use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ApplianceController;
+use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('inventory', InventoryController::class);
     Route::resource('transactions', TransactionController::class);
 
+    // Appointments booked from the Flutter mobile app
+    Route::get('/appointments', [AppointmentController::class , 'index'])->name('appointments.index');
+    Route::patch('/appointments/{appointment}', [AppointmentController::class , 'update'])->name('appointments.update');
+    Route::post('/appointments/{appointment}/convert', [AppointmentController::class , 'convert'])->name('appointments.convert');
+
     Route::middleware(['can:admin-only'])->group(function () {
             Route::resource('prices', ServicePriceController::class);
             // Archive Routes
@@ -57,3 +63,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+

@@ -39,6 +39,30 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
+        // Create a Secretary User
+        User::create([
+            'first_name' => 'Jane',
+            'last_name' => 'Secretary',
+            'username' => 'secretary',
+            'email' => 'secretary@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => 'Secretary',
+            'status' => 'Active',
+            'email_verified_at' => now(),
+        ]);
+
+        // Create a Cashier User
+        User::create([
+            'first_name' => 'Mary',
+            'last_name' => 'Cashier',
+            'username' => 'cashier',
+            'email' => 'cashier@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => 'Cashier',
+            'status' => 'Active',
+            'email_verified_at' => now(),
+        ]);
+
         // Create Sample Customers
         $customer1 = \App\Models\Customer::create([
             'first_name' => 'Jane',

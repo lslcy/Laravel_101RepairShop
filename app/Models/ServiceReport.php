@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int|null $customer_id
+ * @property string|null $customer_id
  * @property string $customer_name
  * @property int|null $appliance_id
  * @property \Illuminate\Support\Carbon $date_in
@@ -64,6 +64,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ServiceReport extends Model
 {
     use SoftDeletes;
+
+    /** 'In Progress' is used by the Flutter app; the rest by the web admin. */
+    public const STATUSES = ['Pending', 'In Progress', 'Waiting for Parts', 'Under Repair', 'Completed', 'Cancelled'];
+
+    /** Statuses grouped under the "In Progress" filter. */
+    public const IN_PROGRESS_STATUSES = ['In Progress', 'Waiting for Parts', 'Under Repair'];
+
     protected $fillable = [
         'customer_id',
         'customer_name',

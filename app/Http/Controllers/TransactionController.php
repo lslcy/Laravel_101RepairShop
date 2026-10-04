@@ -50,11 +50,11 @@ class TransactionController extends Controller
         $transactions = \App\Models\Transaction::with('report')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
-                    $query->where('id', 'like', "%$search%")
-                          ->orWhereDate('payment_date', 'like', "%$search%")
-                          ->orWhereDate('payment_due', 'like', "%$search%")
+                    $query->where('id', 'ilike', "%$search%")
+                          ->orWhereRaw('payment_date::text ilike ?', ["%$search%"])
+                          ->orWhereRaw('payment_due::text ilike ?', ["%$search%"])
                           ->orWhereHas('report', function ($subQuery) use ($search) {
-                              $subQuery->where('customer_name', 'like', "%$search%");
+                              $subQuery->where('customer_name', 'ilike', "%$search%");
                           });
                 });
             })
@@ -65,7 +65,12 @@ class TransactionController extends Controller
                 });
             })
             ->when($status, function ($q) use ($status) {
-                $q->where('payment_status', $status);
+                // The Flutter app writes 'Pending' for unpaid transactions.
+                if ($status === 'Unpaid') {
+                    $q->whereIn('payment_status', ['Unpaid', 'Pending']);
+                } else {
+                    $q->where('payment_status', $status);
+                }
             })
             ->when($receivedBy, function ($q) use ($receivedBy) {
                 if ($receivedBy === 'System') {
@@ -154,6 +159,7 @@ class TransactionController extends Controller
         // Create transaction
         $transaction = \App\Models\Transaction::create([
             'report_id' => $report->id,
+            'customer_id' => $report->customer_id,
             'parts_total' => $validated['materials'],
             'labor_total' => $validated['labor'],
             'total_amount' => $totalAmount,
@@ -162,6 +168,7 @@ class TransactionController extends Controller
             'partial_payment_amount' => $validated['payment_status'] === 'Partial' ? $validated['partial_payment_amount'] : null,
             'reference_no' => $validated['reference_no'] ?? null,
             'payment_date' => $paymentDate,
+            'paid_at' => $validated['payment_status'] === 'Paid' ? now() : null,
             'payment_due' => $validated['payment_due'] ?? null,
             'received_by' => $validated['received_by'] ?? (auth()->user() ? auth()->user()->first_name . ' ' . auth()->user()->last_name : 'System'),
         ]);
@@ -222,6 +229,7 @@ class TransactionController extends Controller
                     $transaction->update([
                         'payment_status' => 'Paid',
                         'payment_date' => now(),
+                        'paid_at' => now(),
                         // Could record 'amount' from payload if needed, but we trust the link generated.
                     ]);
 
@@ -254,7 +262,7 @@ class TransactionController extends Controller
         $this->checkTransactionAccess();
         $validated = $request->validate([
             'total_amount' => 'numeric',
-            'payment_status' => 'string|in:Paid,Unpaid,Partial',
+            'payment_status' => ['string', \Illuminate\Validation\Rule::in(\App\Models\Transaction::STATUSES)],
             'payment_method' => 'nullable|string',
             'partial_payment_amount' => 'required_if:payment_status,Partial|nullable|numeric|min:0',
             'reference_no' => 'nullable|string',
@@ -263,15 +271,21 @@ class TransactionController extends Controller
             'payment_due' => 'nullable|date',
         ]);
 
-        $transaction->update($validated);
-
         if (isset($validated['payment_status'])) {
             if ($validated['payment_status'] !== 'Partial') {
                 $validated['partial_payment_amount'] = null; // Reset partial amount if not partial
             }
-            if ($validated['payment_status'] === 'Paid' && !$transaction->payment_date) {
-                $transaction->update(['payment_date' => now()]);
+            if ($validated['payment_status'] === 'Paid' && empty($validated['payment_date']) && !$transaction->payment_date) {
+                $validated['payment_date'] = now();
             }
+            if ($validated['payment_status'] === 'Paid' && !$transaction->paid_at) {
+                $validated['paid_at'] = now();
+            }
+        }
+
+        $transaction->update($validated);
+
+        if (isset($validated['payment_status'])) {
             $this->applyWarrantyIfPaid($transaction);
         }
 

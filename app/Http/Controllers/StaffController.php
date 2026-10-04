@@ -15,10 +15,10 @@ class StaffController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $staff = User::when($search, fn($q) => $q->where('first_name', 'like', "%$search%")
-        ->orWhere('last_name', 'like', "%$search%")
-        ->orWhere('username', 'like', "%$search%")
-        ->orWhere('email', 'like', "%$search%"))
+        $staff = User::when($search, fn($q) => $q->where('first_name', 'ilike', "%$search%")
+        ->orWhere('last_name', 'ilike', "%$search%")
+        ->orWhere('username', 'ilike', "%$search%")
+        ->orWhere('email', 'ilike', "%$search%"))
             ->latest()
             ->paginate(25)
             ->withQueryString();

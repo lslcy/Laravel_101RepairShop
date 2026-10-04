@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // Used by /api/customer/* to verify Supabase Auth access tokens sent by the Flutter app.
+    'supabase' => [
+        'url' => env('SUPABASE_URL'),
+        'anon_key' => env('SUPABASE_ANON_KEY'),
+    ],
+
 ];
+

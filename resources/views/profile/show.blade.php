@@ -15,7 +15,7 @@
                         @endif
                     </div>
                     <div class="mt-4 sm:mt-12 sm:ml-2 flex flex-col pt-1">
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $user->name }}</h1>
+                        <h1 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</h1>
 
                         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-xl">
                             {{ $user->bio ?? 'Experienced professional managing operations.' }}

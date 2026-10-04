@@ -582,6 +582,7 @@
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg">
                                 <option value="Pending" {{ old('status') == 'Pending' ? 'selected' : '' }}>Pending
                                 </option>
+                                <option value="In Progress" {{ old('status') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
                                 <option value="Waiting for Parts" {{ old('status') == 'Waiting for Parts' ? 'selected' : '' }}>Waiting for Parts</option>
                                 <option value="Under Repair" {{ old('status') == 'Under Repair' ? 'selected' : '' }}>Under
                                     Repair</option>

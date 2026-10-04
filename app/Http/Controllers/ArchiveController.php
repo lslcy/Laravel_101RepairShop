@@ -21,8 +21,8 @@ class ArchiveController extends Controller
         if ($type === 'all' || $type === 'services') {
             $services = ServiceReport::onlyTrashed()
                 ->when($search, function ($query) use ($search) {
-                $query->where('customer_name', 'like', "%$search%")
-                    ->orWhere('id', 'like', "%$search%");
+                $query->where('customer_name', 'ilike', "%$search%")
+                    ->orWhere('id', 'ilike', "%$search%");
             })
                 ->get()
                 ->map(function ($item) {
@@ -36,8 +36,8 @@ class ArchiveController extends Controller
         if ($type === 'all' || $type === 'inventory') {
             $parts = Part::onlyTrashed()
                 ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('part_no', 'like', "%$search%");
+                $query->where('name', 'ilike', "%$search%")
+                    ->orWhere('part_no', 'ilike', "%$search%");
             })
                 ->get()
                 ->map(function ($item) {
@@ -51,8 +51,8 @@ class ArchiveController extends Controller
         if ($type === 'all' || $type === 'customers') {
             $customers = Customer::onlyTrashed()
                 ->when($search, function ($query) use ($search) {
-                $query->where('first_name', 'like', "%$search%")
-                    ->orWhere('last_name', 'like', "%$search%");
+                $query->where('first_name', 'ilike', "%$search%")
+                    ->orWhere('last_name', 'ilike', "%$search%");
             })
                 ->get()
                 ->map(function ($item) {
@@ -66,8 +66,8 @@ class ArchiveController extends Controller
         if ($type === 'all' || $type === 'users') {
             $users = User::onlyTrashed()
                 ->when($search, function ($query) use ($search) {
-                $query->where('first_name', 'like', "%$search%")
-                    ->orWhere('username', 'like', "%$search%");
+                $query->where('first_name', 'ilike', "%$search%")
+                    ->orWhere('username', 'ilike', "%$search%");
             })
                 ->get()
                 ->map(function ($item) {
@@ -81,7 +81,7 @@ class ArchiveController extends Controller
         if ($type === 'all' || $type === 'transactions') {
             $transactions = Transaction::onlyTrashed()
                 ->when($search, function ($query) use ($search) {
-                $query->where('id', 'like', "%$search%");
+                $query->where('id', 'ilike', "%$search%");
             })
                 ->get()
                 ->map(function ($item) {

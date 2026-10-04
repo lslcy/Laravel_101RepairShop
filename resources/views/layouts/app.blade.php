@@ -18,17 +18,36 @@
     <!-- Automatic Resolution Scaling for Small Monitors -->
     <style>
         @media screen and (max-width: 1440px) {
-            html { zoom: 0.85; }
+            html {
+                zoom: 0.85;
+            }
         }
+
         @media screen and (max-width: 1280px) {
-            html { zoom: 0.80; }
+            html {
+                zoom: 0.80;
+            }
         }
+
         @media screen and (max-width: 1024px) {
-            html { zoom: 1; } /* Reset for tablets/mobile, where Tailwind flex wrap handles it normally */
+            html {
+                zoom: 1;
+            }
+
+            /* Reset for tablets/mobile, where Tailwind flex wrap handles it normally */
         }
-        html.text-sm-size { font-size: 14px; }
-        html.text-md-size { font-size: 16px; }
-        html.text-lg-size { font-size: 18px; }
+
+        html.text-sm-size {
+            font-size: 14px;
+        }
+
+        html.text-md-size {
+            font-size: 16px;
+        }
+
+        html.text-lg-size {
+            font-size: 18px;
+        }
     </style>
 
     <!-- Scripts & Styles (Offline TailWind via Vite) -->
@@ -56,8 +75,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
-<body class="bg-[#f8f9fa] dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased"
-    x-data="{
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased" x-data="{
         confirmModal: false,
         confirmTitle: 'Confirm Action',
         confirmMessage: '',
@@ -104,8 +122,7 @@
             };
             return theme[this.confirmVariant] || theme.danger;
         }
-    }"
-    @open-confirm.window="askConfirm($event.detail.message, $event.detail.action, $event.detail)">
+    }" @open-confirm.window="askConfirm($event.detail.message, $event.detail.action, $event.detail)">
 
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
@@ -117,7 +134,7 @@
             @include('layouts.topbar')
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa] dark:bg-gray-900 p-6">
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
                 @if(isset($header))
                     <div class="mb-6">
                         {{ $header }}
@@ -131,40 +148,47 @@
 
     <!-- Global Flash Notification (Toast) -->
     @if(session()->has('success') || session()->has('error'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
-            class="fixed top-20 right-6 z-50 flex items-center p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800"
-            role="alert"
-            x-transition>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+            class="fixed top-16 right-6 z-50 flex items-center p-3 text-sm text-gray-700 bg-white rounded-lg shadow-lg border border-gray-200 dark:text-gray-300 dark:bg-gray-800 dark:border-gray-700"
+            role="alert" x-transition>
             @if(session()->has('success'))
-                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                <div
+                    class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                     </svg>
                     <span class="sr-only">Check icon</span>
                 </div>
                 <div class="ms-3 text-sm font-normal">{{ session('success') }}</div>
             @endif
             @if(session()->has('error'))
-                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 7-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                <div
+                    class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m13 7-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <span class="sr-only">Error icon</span>
                 </div>
                 <div class="ms-3 text-sm font-normal">{{ session('error') }}</div>
             @endif
-            <button type="button" @click="show = false" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 mx-1" aria-label="Close">
+            <button type="button" @click="show = false"
+                class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700 mx-1"
+                aria-label="Close">
                 <span class="sr-only">Close</span>
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                 </svg>
             </button>
         </div>
     @endif
 
     <!-- Global Confirmation Modal -->
-    <div x-show="confirmModal"
-        class="fixed inset-0 z-[999] overflow-y-auto" style="display:none;"
+    <div x-show="confirmModal" class="fixed inset-0 z-[999] overflow-y-auto" style="display:none;"
         x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-150"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
@@ -173,23 +197,29 @@
             <!-- Backdrop -->
             <div class="fixed inset-0 bg-black/40" @click="confirmModal = false"></div>
             <!-- Modal Card -->
-            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl px-6 py-6 max-w-md w-full z-10">
+            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-lg px-6 py-6 max-w-md w-full z-10">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0"
                         :class="variantTheme().iconBg">
                         <template x-if="confirmVariant === 'success'">
-                            <svg class="h-6 w-6" :class="variantTheme().iconText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg class="h-6 w-6" :class="variantTheme().iconText" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </template>
                         <template x-if="confirmVariant === 'info'">
-                            <svg class="h-6 w-6" :class="variantTheme().iconText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            <svg class="h-6 w-6" :class="variantTheme().iconText" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
                             </svg>
                         </template>
                         <template x-if="confirmVariant !== 'success' && confirmVariant !== 'info'">
-                            <svg class="h-6 w-6" :class="variantTheme().iconText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            <svg class="h-6 w-6" :class="variantTheme().iconText" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </template>
                     </div>
@@ -205,8 +235,7 @@
                     </button>
                     <button @click="doConfirm()"
                         class="px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800"
-                        :class="variantTheme().confirmBtn"
-                        x-text="confirmConfirmText">
+                        :class="variantTheme().confirmBtn" x-text="confirmConfirmText">
                     </button>
                 </div>
             </div>
@@ -225,7 +254,7 @@
 
         var themeToggleBtn = document.getElementById('theme-toggle');
         if (themeToggleBtn) {
-            themeToggleBtn.addEventListener('click', function() {
+            themeToggleBtn.addEventListener('click', function () {
                 // toggle icons inside button
                 themeToggleDarkIcon.classList.toggle('hidden');
                 themeToggleLightIcon.classList.toggle('hidden');
@@ -239,7 +268,7 @@
                         document.documentElement.classList.remove('dark');
                         localStorage.setItem('color-theme', 'light');
                     }
-                // if NOT set via local storage previously
+                    // if NOT set via local storage previously
                 } else {
                     if (document.documentElement.classList.contains('dark')) {
                         document.documentElement.classList.remove('dark');
@@ -267,7 +296,7 @@
 
                 if (isGet || isAuth || skipByAttr || insideAppModal) return;
 
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     if (this.dataset.confirmed === 'true') return;
                     e.preventDefault();
 
@@ -323,54 +352,7 @@
                 });
             });
 
-            // Intercept links for Edit / Back / Cancel
-            document.querySelectorAll('a').forEach(a => {
-                const text = a.textContent.trim().toLowerCase();
-                const isBack = text === 'back' || text.includes('back to') || text.includes('back');
-                const isCancel = text === 'cancel';
-                const isEdit = text === 'edit' || /\/edit\b/i.test(a.href);
 
-                // Skip tabs, empty links, or profile pages
-                if (!a.href || a.href === '#' || a.href.includes('profile')) return;
-
-                if (isBack || isCancel || isEdit) {
-                    a.addEventListener('click', function(e) {
-                        if (this.dataset.confirmed === 'true') return;
-                        e.preventDefault();
-                        const href = this.href;
-
-                        const title = this.dataset.confirmTitle ||
-                            (isCancel ? 'Cancel Changes' : isBack ? 'Go Back' : 'Edit Item');
-
-                        const message = this.dataset.confirmMessage ||
-                            (isCancel
-                                ? 'Are you sure you want to cancel? Unsaved changes will be lost.'
-                                : isBack
-                                    ? 'Are you sure you want to go back? Unsaved changes will be lost.'
-                                    : 'Are you sure you want to edit this item?');
-
-                        const variant = this.dataset.confirmVariant ||
-                            (isCancel || isBack ? 'danger' : 'info');
-
-                        const confirmText = this.dataset.confirmConfirmText ||
-                            (isCancel ? 'Leave' : isBack ? 'Go back' : 'Edit');
-
-                        const cancelText = this.dataset.confirmCancelText || 'Stay';
-
-                        dispatchConfirm({
-                            title,
-                            message,
-                            variant,
-                            confirmText,
-                            cancelText,
-                            action: () => {
-                                this.dataset.confirmed = 'true';
-                                window.location.href = href;
-                            }
-                        });
-                    });
-                }
-            });
         });
     </script>
 </body>

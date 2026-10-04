@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id
  * @property int|null $report_id
+ * @property string $customer_id
+ * @property \Illuminate\Support\Carbon|null $paid_at Set by the Flutter app; kept in sync with payment_date
  * @property numeric|null $parts_total
  * @property numeric|null $labor_total
  * @property numeric|null $total_amount
@@ -48,8 +50,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Transaction extends Model
 {
     use SoftDeletes;
+
+    /** 'Pending' is written by the Flutter app and treated like 'Unpaid'. */
+    public const STATUSES = ['Paid', 'Unpaid', 'Partial', 'Pending'];
+
     protected $fillable = [
         'report_id',
+        'customer_id',
         'parts_total',
         'labor_total',
         'total_amount',
@@ -58,6 +65,7 @@ class Transaction extends Model
         'payment_method',
         'reference_no',
         'payment_date',
+        'paid_at',
         'payment_due',
         'received_by',
         'paymongo_link_id',
@@ -67,10 +75,37 @@ class Transaction extends Model
     protected $casts = [
         'payment_date' => 'date',
         'payment_due' => 'date',
+        'paid_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (Transaction $transaction) {
+            // transactions.customer_id is NOT NULL in Supabase.
+            if (empty($transaction->customer_id) && $transaction->report_id) {
+                $transaction->customer_id = ServiceReport::withTrashed()
+                    ->whereKey($transaction->report_id)
+                    ->value('customer_id');
+            }
+
+            // Keep the Flutter (paid_at) and Laravel (payment_date) columns aligned.
+            if ($transaction->isDirty('payment_date') && $transaction->payment_date) {
+                if (!$transaction->paid_at || !$transaction->paid_at->isSameDay($transaction->payment_date)) {
+                    $transaction->paid_at = $transaction->payment_date->copy()->setTimeFrom(now());
+                }
+            } elseif ($transaction->isDirty('paid_at') && $transaction->paid_at) {
+                $transaction->payment_date = $transaction->paid_at->copy()->startOfDay();
+            }
+        });
+    }
 
     public function report()
     {
         return $this->belongsTo(ServiceReport::class , 'report_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class)->withTrashed();
     }
 }

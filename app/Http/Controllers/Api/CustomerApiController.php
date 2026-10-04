@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Appointment;
 use App\Models\Customer;
-use App\Models\ServiceReport;
-use App\Models\Appliance;
+use Illuminate\Http\Request;
 
+/**
+ * Customer-facing API for the Flutter app.
+ *
+ * Every route is behind AuthenticateSupabaseCustomer, so the customer always
+ * comes from the verified Supabase token and never from a header or query
+ * string. Results are strictly scoped to that customer, and Eloquent
+ * soft-delete scopes hide records archived in the web admin.
+ */
 class CustomerApiController extends Controller
 {
-    /**
-     * Resolve current customer ID from request header or query param.
-     * Defaults to customer ID 1 for quick testing.
-     */
-    private function resolveCustomerId(Request $request): int
+    private function customer(Request $request): Customer
     {
-        return (int) ($request->header('X-Customer-ID') ?? $request->query('customer_id', 1));
+        return $request->attributes->get('customer');
     }
 
     /**
@@ -24,51 +27,15 @@ class CustomerApiController extends Controller
      */
     public function getProfile(Request $request)
     {
-        $customerId = $this->resolveCustomerId($request);
-        $customer = Customer::find($customerId);
+        $customer = $this->customer($request);
 
-        if (!$customer) {
-            // If customer 1 doesn't exist, get the first available customer
-            $customer = Customer::first();
+        $data = $customer->toArray();
+        // Web uploads are stored as "storage/..." on the Laravel server; give the app a full URL.
+        if ($customer->profile_picture && !str_starts_with($customer->profile_picture, 'http')) {
+            $data['profile_picture'] = asset($customer->profile_picture);
         }
 
-        if (!$customer) {
-            return response()->json([
-                'id' => $customerId,
-                'first_name' => 'Valued',
-                'last_name' => 'Customer',
-                'email' => 'customer@101repairshop.com',
-                'phone_no' => '09123456789',
-                'address' => 'Customer Address',
-                'profile_picture' => null,
-            ]);
-        }
-
-        return response()->json($customer);
-    }
-
-    /**
-     * GET /api/customer/service-reports
-     */
-    public function getServiceReports(Request $request)
-    {
-        $customerId = $this->resolveCustomerId($request);
-
-        // Fetch service reports for this customer, or return latest reports if customer has none
-        $reports = ServiceReport::with('appliance')
-            ->where('customer_id', $customerId)
-            ->orderBy('id', 'desc')
-            ->get();
-
-        if ($reports->isEmpty()) {
-            // Fallback for demonstration: load all recent service reports
-            $reports = ServiceReport::with('appliance')
-                ->orderBy('id', 'desc')
-                ->limit(20)
-                ->get();
-        }
-
-        return response()->json($reports);
+        return response()->json($data);
     }
 
     /**
@@ -76,15 +43,34 @@ class CustomerApiController extends Controller
      */
     public function getAppliances(Request $request)
     {
-        $customerId = $this->resolveCustomerId($request);
+        return response()->json(
+            $this->customer($request)->appliances()->orderByDesc('id')->get()
+        );
+    }
 
-        $appliances = Appliance::where('customer_id', $customerId)->get();
+    /**
+     * GET /api/customer/service-reports
+     * Includes cost/technician details (service_details) and payments.
+     */
+    public function getServiceReports(Request $request)
+    {
+        $reports = $this->customer($request)
+            ->serviceReports()
+            ->with(['appliance', 'details', 'transactions', 'comments:id,report_id,progress_key,comment_text,created_by_name,created_at'])
+            ->orderByDesc('id')
+            ->get();
 
-        if ($appliances->isEmpty()) {
-            $appliances = Appliance::limit(10)->get();
-        }
+        return response()->json($reports);
+    }
 
-        return response()->json($appliances);
+    /**
+     * GET /api/customer/transactions
+     */
+    public function getTransactions(Request $request)
+    {
+        return response()->json(
+            $this->customer($request)->transactions()->with('report:id,status,appliance_id')->orderByDesc('id')->get()
+        );
     }
 
     /**
@@ -92,37 +78,9 @@ class CustomerApiController extends Controller
      */
     public function getAppointments(Request $request)
     {
-        $customerId = $this->resolveCustomerId($request);
-
-        // Map pending/scheduled service reports as appointments
-        $serviceReports = ServiceReport::with('appliance')
-            ->where(function ($q) use ($customerId) {
-                $q->where('customer_id', $customerId)
-                  ->orWhere('id', '>', 0);
-            })
-            ->whereIn('status', ['Pending', 'In Progress', 'For Diagnosis', 'Scheduled'])
-            ->orderBy('id', 'desc')
-            ->limit(10)
-            ->get();
-
-        $appointments = $serviceReports->map(function ($report) {
-            $applianceName = $report->appliance 
-                ? trim(($report->appliance->brand ?? '') . ' ' . ($report->appliance->product ?? ''))
-                : 'General Appliance';
-
-            return [
-                'id' => $report->id,
-                'customer_id' => $report->customer_id ?? 1,
-                'title' => 'Repair Check-up #' . $report->id,
-                'appliance_name' => $applianceName ?: 'Appliance Unit',
-                'appointment_date' => $report->date_in ? $report->date_in->toIso8601String() : now()->addDays(1)->toIso8601String(),
-                'time_slot' => '09:00 AM - 12:00 PM',
-                'status' => $report->status,
-                'notes' => $report->findings ?? $report->remarks ?? 'Diagnostic inspection',
-            ];
-        });
-
-        return response()->json($appointments);
+        return response()->json(
+            $this->customer($request)->appointments()->orderByDesc('appointment_date')->get()
+        );
     }
 
     /**
@@ -130,35 +88,32 @@ class CustomerApiController extends Controller
      */
     public function createAppointment(Request $request)
     {
-        $customerId = $this->resolveCustomerId($request);
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'appliance_name' => 'nullable|string|max:255',
-            'appointment_date' => 'required',
-            'time_slot' => 'nullable|string',
-            'notes' => 'nullable|string',
+            'appointment_date' => 'required|date|after_or_equal:today',
+            'time_slot' => 'nullable|string|max:100',
+            'notes' => 'nullable|string|max:2000',
         ]);
 
-        // Automatically create a ServiceReport entry in the database with 'Pending' status!
-        $report = ServiceReport::create([
-            'customer_id' => $customerId,
-            'customer_name' => Customer::find($customerId)?->first_name ?? 'Mobile Customer',
-            'date_in' => $validated['appointment_date'],
-            'status' => 'Pending',
-            'findings' => $validated['notes'] ?? 'Booked via customer mobile app',
-            'remarks' => 'Title: ' . $validated['title'] . ($validated['appliance_name'] ? ' (' . $validated['appliance_name'] . ')' : ''),
-        ]);
+        $appointment = $this->customer($request)->appointments()->create($validated + ['status' => 'Pending']);
 
-        return response()->json([
-            'id' => $report->id,
-            'customer_id' => $customerId,
-            'title' => $validated['title'],
-            'appliance_name' => $validated['appliance_name'] ?? 'Appliance',
-            'appointment_date' => $report->date_in ? $report->date_in->toIso8601String() : now()->toIso8601String(),
-            'time_slot' => $validated['time_slot'] ?? '09:00 AM',
-            'status' => 'Pending',
-            'notes' => $validated['notes'] ?? '',
-        ], 201);
+        return response()->json($appointment->fresh(), 201);
+    }
+
+    /**
+     * PATCH /api/customer/appointments/{appointment}/cancel
+     */
+    public function cancelAppointment(Request $request, int $appointment)
+    {
+        $model = Appointment::where('customer_id', $this->customer($request)->id)->findOrFail($appointment);
+
+        if (in_array($model->status, ['Completed', 'Cancelled'], true)) {
+            return response()->json(['message' => "Appointment is already {$model->status}."], 422);
+        }
+
+        $model->update(['status' => 'Cancelled']);
+
+        return response()->json($model);
     }
 }

@@ -3,7 +3,7 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Service Report #{{ $service->id }}</h2>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Service Report #{{ $service->id }}</h2>
                 <div class="mt-1 flex items-center space-x-4 text-sm text-gray-500 dark:text-slate-400">
                     <span>Date In: {{ $service->date_in ? $service->date_in->format('M d, Y') : 'N/A' }}</span>
                     <span>&bull;</span>
@@ -33,7 +33,7 @@
                 </a>
                 @if(in_array(auth()->user()->role, ['Administrator', 'Technician']))
                     <a href="{{ route('services.edit', $service) }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                         <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -49,7 +49,7 @@
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Details Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                <div class="ui-card overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Appliance Details</h3>
                     </div>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <dt class="text-sm font-medium text-gray-500 dark:text-slate-400">Problem Description</dt>
-                            <dd class="mt-1 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-100 dark:border-slate-700">
+                            <dd class="mt-1 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-200 dark:border-slate-700">
                                 {{ $service->problem_desc }}
                             </dd>
                         </div>
@@ -77,7 +77,7 @@
                             <div class="sm:col-span-2">
                                 <dt class="text-sm font-medium text-gray-500 dark:text-slate-400">Findings</dt>
                                 <dd
-                                    class="mt-1 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-100 dark:border-slate-700 whitespace-pre-line">
+                                    class="mt-1 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-200 dark:border-slate-700 whitespace-pre-line">
                                     {{ $service->findings }}
                                 </dd>
                             </div>
@@ -92,7 +92,7 @@
                             <div class="sm:col-span-2">
                                 <dt class="text-sm font-medium text-gray-500 dark:text-slate-400">Miscellaneous Notes (Not in Inventory)</dt>
                                 <dd
-                                    class="mt-1 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-100 dark:border-slate-700 whitespace-pre-line">
+                                    class="mt-1 text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg border border-gray-200 dark:border-slate-700 whitespace-pre-line">
                                     {{ $service->used_parts }}
                                 </dd>
                             </div>
@@ -205,7 +205,7 @@
                             <dt class="text-sm font-medium text-gray-500 dark:text-slate-400 mb-2">Attachments</dt>
                             <dd class="mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg p-3 flex flex-wrap gap-3">
                                 @foreach($service->attachments as $attachment)
-                                    <a href="{{ $attachment['url'] }}" target="_blank" class="flex items-center space-x-2 text-sm text-blue-700 dark:blue-600 hover:text-blue-900 bg-blue-50 border border-blue-100 px-3 py-2 rounded-md hover:shadow-sm transition-all group">
+                                    <a href="{{ $attachment['url'] }}" target="_blank" class="flex items-center space-x-2 text-sm text-blue-700 hover:text-blue-900 bg-blue-50 border border-blue-100 px-3 py-2 rounded-md hover:shadow-sm transition-all group">
                                         @if(isset($attachment['resource_type']) && $attachment['resource_type'] === 'image')
                                             <svg class="w-5 h-5 text-blue-400 group-hover:text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L28 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                         @else
@@ -243,7 +243,7 @@
                 </div>
 
                 <!-- Comments Section -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                <div class="ui-card overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Progress Log & Comments</h3>
                     </div>
@@ -302,7 +302,7 @@
             <!-- Sidebar -->
             <div class="space-y-6">
                 <!-- Customer Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                <div class="ui-card overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customer Info</h3>
                     </div>
@@ -356,7 +356,7 @@
                 </div>
 
                 <!-- Payments Card -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+                <div class="ui-card overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Payments</h3>
                         @if(in_array(auth()->user()->role, ['Administrator', 'Cashier']))

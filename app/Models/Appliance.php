@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $customer_id
+ * @property string $customer_id
  * @property string|null $brand
  * @property string|null $product
  * @property string|null $model_no
@@ -41,6 +41,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Appliance extends Model
 {
     use SoftDeletes;
+
+    /** Known status values; 'Active' and 'For Repair' come from the Flutter app. */
+    public const STATUSES = ['Active', 'For Repair', 'Under Repair', 'Repaired', 'Inactive'];
 
     protected $fillable = [
         'customer_id',

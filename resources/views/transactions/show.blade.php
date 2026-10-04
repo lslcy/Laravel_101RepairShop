@@ -2,21 +2,21 @@
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Transaction #{{ $transaction->id }}</h2>
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Transaction #{{ $transaction->id }}</h2>
             <div class="flex space-x-3">
                 <a href="{{ route('transactions.index') }}"
                     class="px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg text-sm font-medium text-gray-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     Back to List
                 </a>
                 <a href="{{ route('transactions.edit', $transaction) }}"
-                    class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     Edit Transaction
                 </a>
             </div>
         </div>
 
         <!-- Details Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <!-- Status Row -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -161,7 +161,7 @@
                                 </template>
                             </button>
                             <a href="{{ $transaction->payment_url }}" target="_blank"
-                                class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 dark:border-slate-500 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:blue-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
+                                class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 dark:border-slate-500 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
                                 Open
                                 <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

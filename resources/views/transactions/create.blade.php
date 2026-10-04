@@ -2,7 +2,7 @@
     <div class="w-full mx-auto space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Transaction</h2>
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Create New Transaction</h2>
             @if(request('report_id'))
                 <a href="{{ route('services.show', request('report_id')) }}"
                     class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
@@ -25,7 +25,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden" x-data="{
+        <div class="ui-card overflow-hidden" x-data="{
             reports: {{ Js::from($reports->map(function ($r) {
     return [
         'id' => $r->id,

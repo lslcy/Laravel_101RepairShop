@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @property int $id
+ * @property string $id
+ * @property string|null $auth_id Supabase auth.users id (set when the customer signs in on the mobile app)
  * @property string|null $first_name
  * @property string|null $last_name
  * @property string|null $email
@@ -15,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int|null $deleted_by
+ * @property string|null $deleted_by
  * @property string|null $deletion_reason
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Appliance> $appliances
  * @property-read int|null $appliances_count
@@ -42,8 +44,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Customer extends Model
 {
-    use SoftDeletes;
+    use HasUuids, SoftDeletes;
+
     protected $fillable = [
+        'auth_id',
         'first_name',
         'last_name',
         'email',
@@ -62,5 +66,23 @@ class Customer extends Model
     public function serviceReports()
     {
         return $this->hasMany(ServiceReport::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * True when this customer is linked to a Supabase Auth (mobile app) account.
+     */
+    public function getHasMobileAccountAttribute(): bool
+    {
+        return !empty($this->auth_id);
     }
 }

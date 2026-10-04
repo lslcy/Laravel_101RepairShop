@@ -1,19 +1,22 @@
 <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen fixed left-0 top-0 z-50">
     <!-- Logo -->
-    <div class="flex items-center justify-center px-6 py-6 border-b border-slate-800">
+    <div class="flex items-center justify-center px-4 py-4 border-b border-slate-800">
         <a href="{{ route('dashboard') }}" class="flex items-center justify-center w-full">
             <div class="p-2 w-full flex justify-center">
                 <!-- Light Mode Logo (Blue) -->
-                <img src="{{ asset('img/repairservicelogoblue.png') }}" alt="101 Repair Shop Logo" class="w-40 h-auto max-h-32 object-contain block dark:hidden">
+                <img src="{{ asset('img/repairservicelogoblue.png') }}" alt="101 Repair Shop Logo"
+                    class="w-40 h-auto max-h-32 object-contain block dark:hidden">
                 <!-- Dark Mode Logo (Gray/Red) -->
-                <img src="{{ asset('img/repairservicelogogray.png') }}" alt="101 Repair Shop Logo" class="w-40 h-auto max-h-32 object-contain hidden dark:block">
+                <img src="{{ asset('img/repairservicelogogray.png') }}" alt="101 Repair Shop Logo"
+                    class="w-40 h-auto max-h-32 object-contain hidden dark:block">
             </div>
         </a>
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-        <!-- Dashboard -->
+    <nav class="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
+        <!-- Main -->
+        <p class="px-3 pt-2 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Main</p>
         <a href="{{ route('dashboard') }}"
             class="flex items-center px-3 py-2.5 rounded-lg group {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             <svg class="w-5 h-5 mr-3 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-slate-300' }}"
@@ -25,7 +28,8 @@
             <span class="font-medium">Dashboard</span>
         </a>
 
-        <!-- Customers -->
+        <!-- Management -->
+        <p class="px-3 pt-4 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Management</p>
         @if(in_array(auth()->user()->role, ['Administrator', 'Secretary', 'Cashier']))
             <a href="{{ route('customers.index') }}"
                 class="flex items-center px-3 py-2.5 rounded-lg group {{ request()->routeIs('customers.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
@@ -50,6 +54,25 @@
             </svg>
             <span class="font-medium">Service Reports</span>
         </a>
+
+        <!-- Appointments (booked from the mobile app) -->
+        @if(in_array(auth()->user()->role, ['Administrator', 'Secretary']))
+            @php
+                $pendingAppointments = cache()->remember('sidebar_pending_appointments', 60, fn () => \App\Models\Appointment::where('status', 'Pending')->count());
+            @endphp
+            <a href="{{ route('appointments.index') }}"
+                class="flex items-center px-3 py-2.5 rounded-lg group {{ request()->routeIs('appointments.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                <svg class="w-5 h-5 mr-3 {{ request()->routeIs('appointments.*') ? 'text-white' : 'text-slate-400 group-hover:text-slate-300' }}"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="font-medium flex-1">Appointments</span>
+                @if($pendingAppointments > 0)
+                    <span class="ml-2 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full text-[10px] font-bold {{ request()->routeIs('appointments.*') ? 'bg-white text-blue-600' : 'bg-orange-500 text-white' }}">{{ $pendingAppointments }}</span>
+                @endif
+            </a>
+        @endif
 
         <!-- Transactions -->
         @if(in_array(auth()->user()->role, ['Administrator', 'Cashier']))
@@ -78,6 +101,9 @@
         @endif
 
         @if(auth()->user()->role === 'Administrator')
+            <!-- Administration -->
+            <p class="px-3 pt-4 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">Administration</p>
+
             <!-- Users (formerly Staff) -->
             <a href="{{ route('staff.index') }}"
                 class="flex items-center px-3 py-2.5 rounded-lg group {{ request()->routeIs('staff.*') ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">

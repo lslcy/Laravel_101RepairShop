@@ -2,21 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * ═══════════════════════════════════════════════════
+ * 101 REPAIR SERVICE — DESIGN SYSTEM
+ * ═══════════════════════════════════════════════════
+ *
+ * Color System:
+ *   Primary:     blue-600 (#2563eb)
+ *   Surfaces:    white, gray-50, slate-900 (dark)
+ *   Text:        gray-900, gray-600, gray-400
+ *   Borders:     gray-200, slate-700 (dark)
+ *   Status:      green-600, amber-500, red-600, blue-600
+ *
+ * Typography:    Inter, system-ui
+ * Spacing:       4/8/12/16/24/32/48 (8px grid)
+ * Radius:        6px (sm), 8px (md), 10px (lg)
+ * Shadows:       Minimal — borders preferred
+ */
+
 @layer base {
+    /* ── Dark mode form inputs ── */
     .dark input:not([type='checkbox']):not([type='radio']),
     .dark textarea,
     .dark select {
         @apply bg-slate-800 border-slate-600 text-slate-100 placeholder-slate-400;
     }
-    
+
     .dark input:focus:not([type='checkbox']):not([type='radio']),
     .dark textarea:focus,
     .dark select:focus {
         @apply ring-blue-500 border-blue-500;
     }
-    
+
     .dark input[type='checkbox'],
     .dark input[type='radio'] {
         @apply border-slate-500 bg-slate-800;
     }
+
+    /* ── Scrollbar — thin and unobtrusive ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+    .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+    .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
 }
