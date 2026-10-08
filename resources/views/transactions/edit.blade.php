@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div class="w-full mx-auto space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Transaction #{{ $transaction->id }}</h2>
+        <div class="ui-page-header">
+            <h2 class="ui-page-title">Edit Transaction #{{ $transaction->id }}</h2>
             <a href="{{ route('transactions.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <form action="{{ route('transactions.update', $transaction) }}" method="POST" class="space-y-6">
                     @csrf
@@ -56,7 +56,7 @@
                                 <select id="payment_status" name="payment_status" x-model="payment_status"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg">
                                     <option value="Unpaid">Unpaid</option>
-                                    <option value="Pending">Pending (from mobile app)</option>
+                                    <option value="Pending">Pending</option>
                                     <option value="Paid">Paid</option>
                                     <option value="Partial">Partial</option>
                                 </select>
@@ -111,6 +111,7 @@
                                     <option value="">Select Method</option>
                                     <option value="Cash" {{ old('payment_method', $transaction->payment_method) == 'Cash' ? 'selected' : '' }}>Cash</option>
                                     <option value="GCash" {{ old('payment_method', $transaction->payment_method) == 'GCash' ? 'selected' : '' }}>GCash</option>
+                                    <option value="Card" {{ old('payment_method', $transaction->payment_method) == 'Card' ? 'selected' : '' }}>Card</option>
                                     <option value="PayMaya" {{ old('payment_method', $transaction->payment_method) == 'PayMaya' ? 'selected' : '' }}>PayMaya</option>
                                     <option value="Bank Transfer" {{ old('payment_method', $transaction->payment_method) == 'Bank Transfer' ? 'selected' : '' }}>Bank Transfer</option>
                                     <option value="Check" {{ old('payment_method', $transaction->payment_method) == 'Check' ? 'selected' : '' }}>Check</option>
@@ -136,7 +137,7 @@
                                 <label for="received_by" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Received By <span class="text-gray-400 text-xs">(Defaults to {{ auth()->user()->first_name }} {{ auth()->user()->last_name }})</span></label>
                                 <input type="text" name="received_by" id="received_by"
                                     class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 dark:border-slate-500 rounded-lg"
-                                    placeholder="Name of Cashier/Admin" value="{{ old('received_by', $transaction->received_by ?? auth()->user()->first_name . ' ' . auth()->user()->last_name) }}">
+                                    placeholder="Name of Cashier/Admin" value="{{ old('received_by', $transaction->received_by && $transaction->received_by !== 'System' ? $transaction->received_by : auth()->user()->full_name) }}">
                                 @error('received_by')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror

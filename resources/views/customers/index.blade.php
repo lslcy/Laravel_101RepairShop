@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Customer Management</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Manage your customer information and records
+                <h2 class="ui-page-title">Customer Management</h2>
+                <p class="ui-page-subtitle">Manage your customer information and records
                 </p>
             </div>
             @if(auth()->user()->role === 'Administrator')
@@ -20,7 +20,7 @@
 
         <!-- Filters & Search -->
         <div
-            class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm print:hidden">
+            class="ui-card p-4 print:hidden">
             <form method="GET" action="{{ route('customers.index') }}" class="flex flex-col md:flex-row gap-4"
                 id="filterForm">
 
@@ -76,9 +76,9 @@
 
         <!-- Table -->
         <div
-            class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden">
+            class="ui-card overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="ui-table">
                     <thead class="bg-gray-50 dark:bg-slate-700/50">
                         <tr>
                             <th scope="col"
@@ -109,7 +109,7 @@
                     </thead>
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200" id="customersTableBody">
                         @forelse($customers as $customer)
-                            <tr class="hover:bg-gray-50 dark:bg-slate-700/50 transition-colors">
+                            <tr class="table-row-hover">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                     #{{ $customers->firstItem() + $loop->index }}
                                 </td>
@@ -236,7 +236,7 @@
 
             <!-- Pagination -->
             <div
-                class="px-6 py-4 border-t border-gray-200 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between">
+                class="ui-pagination">
                 <div class="text-sm text-gray-500 dark:text-slate-400">
                     Showing <span class="font-medium">{{ $customers->firstItem() ?: 0 }}</span> to
                     <span class="font-medium">{{ $customers->lastItem() ?: 0 }}</span> of

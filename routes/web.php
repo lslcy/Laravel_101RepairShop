@@ -18,7 +18,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// PayMongo Webhook (Must be outside 'auth' middleware so PayMongo can access it securely)
+// Acknowledge PayMongo callbacks; staff confirm payments on the existing transaction.
 Route::post('/webhooks/paymongo', [TransactionController::class , 'paymongoWebhook'])->name('webhooks.paymongo');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -63,4 +63,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-

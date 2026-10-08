@@ -1,20 +1,20 @@
 <x-app-layout>
-    <div class="w-full mx-auto py-6 sm:px-6 lg:px-8 space-y-6" x-data="{ tab: 'account' }">
+    <div class="ui-page" x-data="{ tab: 'account' }">
         <!-- Header -->
-        <div class="md:flex md:items-center md:justify-between px-4 sm:px-0">
+        <div class="ui-page-header">
             <div class="flex-1 min-w-0">
-                <h2 class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl sm:truncate">
+                <h2 class="ui-page-title">
                     Settings
                 </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="ui-page-subtitle">
                     Manage your account settings and preferences.
                 </p>
             </div>
         </div>
 
         <!-- Tabs Navigation -->
-        <div class="border-b border-gray-200 dark:border-gray-700 px-4 sm:px-0">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <div class="border-b border-gray-200 dark:border-slate-700 overflow-x-auto">
+            <nav class="-mb-px flex min-w-max gap-8" aria-label="Tabs">
                 <button @click="tab = 'account'"
                     :class="tab === 'account' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'"
                     class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center">
@@ -64,7 +64,7 @@
 
 
             <!-- Update Profile Info -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
+            <div class="ui-card p-6">
                 @include('profile.partials.update-profile-information-form')
             </div>
         </div>
@@ -73,11 +73,11 @@
         <div x-show="tab === 'security'" style="display: none;" class="space-y-6">
             <!-- Update Password -->
             @if(auth()->user()->role !== 'Administrator')
-                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
+                <div class="ui-card p-6">
                     @include('profile.partials.update-password-form')
                 </div>
             @else
-                <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
+                <div class="ui-card p-6">
                     <header class="mb-4">
                         <h2 class="text-lg font-bold text-gray-900 dark:text-white">Update Password</h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -88,7 +88,7 @@
             @endif
 
             <!-- Two-Factor Auth (Placeholder) -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
+            <div class="ui-card p-6">
                 <header class="mb-4">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white">Two-Factor Authentication</h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security to your
@@ -120,7 +120,7 @@
 
         <!-- NOTIFICATIONS TAB -->
         <div x-show="tab === 'notifications'" style="display: none;" class="space-y-6">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-gray-100 dark:border-gray-700 p-6">
+            <div class="ui-card p-6">
                 <header class="mb-4">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white">Email Notifications</h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Get notified about important updates.</p>
@@ -160,7 +160,7 @@
         <!-- PRIVACY TAB -->
         <div x-show="tab === 'privacy'" style="display: none;" class="space-y-6">
             <!-- Delete Account -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg border border-red-100 dark:border-red-900 p-6">
+            <div class="ui-card p-6 border-red-100 dark:border-red-900">
                 @include('profile.partials.delete-user-form')
             </div>
         </div>

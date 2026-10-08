@@ -29,6 +29,7 @@ class InventoryController extends Controller
                 }
             })
             ->latest()
+            ->orderByDesc('id')
             ->paginate(25)
             ->withQueryString();
 

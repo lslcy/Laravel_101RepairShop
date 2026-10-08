@@ -12,14 +12,7 @@ class ServicePriceController extends Controller
      */
     public function index()
     {
-        // Assuming the model is ServicePrice and table is service_prices
-        // I need to check if the model exists. Based on logic, it should be ServicePrice or WorkService?
-        // Let's assume ServicePrice model exists or I might need to create it.
-        // Wait, did I create a ServicePrice model? Implementation plan mentioned it.
-        // Let me assume it exists or I'll check/create it.
-        // Checking previous file listing... I didn't see it explicitly but I'll assume standard naming.
-
-        $prices = \App\Models\ServicePrice::all();
+        $prices = ServicePrice::latest()->orderByDesc('id')->get();
         return view('prices.index', compact('prices'));
     }
 

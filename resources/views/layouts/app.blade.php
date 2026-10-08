@@ -70,12 +70,13 @@
             localStorage.setItem('font-size', size);
         }
     </script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Leaflet JS (Maps) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased" x-data="{
+        sidebarOpen: false,
+        isMobile: window.innerWidth < 1024,
         confirmModal: false,
         confirmTitle: 'Confirm Action',
         confirmMessage: '',
@@ -122,19 +123,23 @@
             };
             return theme[this.confirmVariant] || theme.danger;
         }
-    }" @open-confirm.window="askConfirm($event.detail.message, $event.detail.action, $event.detail)">
+    }" @open-confirm.window="askConfirm($event.detail.message, $event.detail.action, $event.detail)"
+        @resize.window="isMobile = window.innerWidth < 1024; if (!isMobile) sidebarOpen = false"
+        @keydown.escape.window="if (sidebarOpen) { sidebarOpen = false; $nextTick(() => document.getElementById('sidebar-toggle').focus()) }">
 
     <div class="flex h-screen overflow-hidden">
+        <div x-show="sidebarOpen && isMobile" x-cloak @click="sidebarOpen = false; $nextTick(() => document.getElementById('sidebar-toggle').focus())"
+            class="fixed inset-0 z-40 bg-slate-950/50 lg:hidden" aria-hidden="true"></div>
         <!-- Sidebar -->
         @include('layouts.sidebar')
 
         <!-- Main Content Wrapper -->
-        <div class="flex-1 flex flex-col ml-64 transition-all duration-300">
+        <div class="flex-1 min-w-0 flex flex-col lg:ml-64 transition-all duration-300" :inert="isMobile && sidebarOpen">
             <!-- Topbar -->
             @include('layouts.topbar')
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
+            <main class="flex-1 min-w-0 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 sm:p-6">
                 @if(isset($header))
                     <div class="mb-6">
                         {{ $header }}

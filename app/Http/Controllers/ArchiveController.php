@@ -93,7 +93,11 @@ class ArchiveController extends Controller
         }
 
         // Pagination (manual)
-        $archives = $archives->sortByDesc('deleted_at')->map(function ($item) {
+        $archives = $archives->sortBy([
+            ['deleted_at', 'desc'],
+            ['type', 'asc'],
+            ['id', 'desc'],
+        ])->map(function ($item) {
             // Resolve deleted_by name if it's an integer (user ID)
             if (isset($item->deleted_by) && is_numeric($item->deleted_by)) {
                 $deleter = User::withTrashed()->find($item->deleted_by);

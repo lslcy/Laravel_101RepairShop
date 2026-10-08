@@ -8,6 +8,9 @@ use App\Models\ServiceDetail;
 use App\Notifications\ServiceReportCreated;
 use App\Notifications\ServiceReportUpdated;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
+use App\Services\ServiceBillingService;
+use App\Services\PayMongoPaymentService;
 
 class ServiceReportController extends Controller
 {
@@ -97,8 +100,8 @@ class ServiceReportController extends Controller
             }
         }
 
-        // Sync the pivot table with quantities & prices
-        $report->parts()->sync($partsData);
+        // Form rows arrive newest first; attach oldest first to preserve that order when timestamps match.
+        $report->parts()->sync(array_reverse($partsData, true));
         return $partsTotalCost;
     }
 
@@ -126,6 +129,7 @@ class ServiceReportController extends Controller
                 $q->whereDate('date_in', $date);
             })
             ->latest()
+            ->orderByDesc('id')
             ->paginate(25)
             ->withQueryString();
 
@@ -152,7 +156,7 @@ class ServiceReportController extends Controller
             'status' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\ServiceReport::STATUSES)],
             'findings' => 'nullable|string',
             'problem_desc' => 'required|string',
-            'labor_cost' => 'nullable|numeric',
+            'labor_cost' => 'nullable|numeric|min:0',
             'remarks' => 'nullable|string',
             'dealer' => 'nullable|string',
             'dop' => 'nullable|date',
@@ -160,7 +164,7 @@ class ServiceReportController extends Controller
             'service_types' => 'nullable|array',
             'used_parts' => 'nullable|string',
             'parts' => 'nullable|array',
-            'miscellaneous_cost' => 'nullable|numeric',
+            'miscellaneous_cost' => 'nullable|numeric|min:0',
         ]);
 
         $customer = \App\Models\Customer::find($validated['customer_id']);
@@ -178,35 +182,40 @@ class ServiceReportController extends Controller
 
         $validated['customer_name'] = trim($customer->first_name . ' ' . $customer->last_name);
 
-        $report = \App\Models\ServiceReport::create($validated);
+        [$bill, $amountChanged] = DB::transaction(function () use ($request, $validated) {
+            $report = \App\Models\ServiceReport::create($validated);
+            $partsTotalCost = $this->processParts($report, $request->input('parts', []), true);
+            $labor = $validated['labor_cost'] ?? 0;
+            $miscCost = $validated['miscellaneous_cost'] ?? 0;
 
-        // Process Parts & Inventory Sync
-        $partsInput = $request->input('parts', []);
-        $partsTotalCost = $this->processParts($report, $partsInput, true);
+            $details = ServiceDetail::create([
+                'report_id' => $report->id,
+                'service_types' => $validated['service_types'] ?? [],
+                'labor' => $labor,
+                'parts_total_charge' => $partsTotalCost,
+                'miscellaneous_cost' => $miscCost,
+                'total_amount' => $labor + $partsTotalCost + $miscCost,
+                'complaint' => $validated['problem_desc'],
+                'technician' => isset($validated['technicians']) ? implode(', ', $validated['technicians']) : null,
+            ]);
 
-        // Create initial Service Detail
-        $techs = isset($validated['technicians']) ? implode(', ', $validated['technicians']) : null;
-        $labor = $request->labor_cost ?? 0;
-        $miscCost = $request->miscellaneous_cost ?? 0;
-        $totalAmount = $labor + $partsTotalCost + $miscCost;
+            return app(ServiceBillingService::class)->syncPendingBill($report, $details);
+        });
 
-        ServiceDetail::create([
-            'report_id' => $report->id,
-            'service_types' => $validated['service_types'] ?? [],
-            'labor' => $labor,
-            'parts_total_charge' => $partsTotalCost,
-            'miscellaneous_cost' => $miscCost,
-            'total_amount' => $totalAmount,
-            'complaint' => $request->problem_desc,
-            'technician' => $techs,
-        ]);
+        if ($bill) {
+            app(PayMongoPaymentService::class)->ensurePaymentLink($bill, $amountChanged);
+        }
 
         return redirect()->route('services.index')->with('success', 'Service Report created successfully.');
     }
 
     public function show(\App\Models\ServiceReport $service)
     {
-        $service->load(['comments.user', 'transactions']);
+        $service->load([
+            'comments.user',
+            'parts' => fn ($q) => $q->orderByPivot('created_at', 'desc')->orderByPivot('id', 'desc'),
+            'transactions' => fn ($q) => $q->latest()->orderByDesc('id'),
+        ]);
         $technicians = $this->getTechniciansWithAvailability();
         $techStatusMap = $technicians->mapWithKeys(function (User $tech) {
             $name = strtolower(trim(($tech->first_name ?? '') . ' ' . ($tech->last_name ?? '')));
@@ -225,7 +234,9 @@ class ServiceReportController extends Controller
         $technicians = $this->getTechniciansWithAvailability();
         $parts = \App\Models\Part::all();
         $servicePrices = \App\Models\ServicePrice::all();
-        $service->load('parts');
+        $service->load([
+            'parts' => fn ($q) => $q->orderByPivot('created_at', 'desc')->orderByPivot('id', 'desc'),
+        ]);
         return view('services.edit', compact('service', 'customers', 'technicians', 'parts', 'servicePrices'));
     }
 
@@ -244,7 +255,7 @@ class ServiceReportController extends Controller
             'status' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\ServiceReport::STATUSES)],
             'findings' => 'nullable|string',
             'problem_desc' => 'required|string',
-            'labor_cost' => 'nullable|numeric',
+            'labor_cost' => 'nullable|numeric|min:0',
             'remarks' => 'nullable|string',
             'dealer' => 'nullable|string',
             'dop' => 'nullable|date',
@@ -252,7 +263,7 @@ class ServiceReportController extends Controller
             'service_types' => 'nullable|array',
             'used_parts' => 'nullable|string',
             'parts' => 'nullable|array',
-            'miscellaneous_cost' => 'nullable|numeric',
+            'miscellaneous_cost' => 'nullable|numeric|min:0',
         ];
 
         if ($userRole === 'Technician') {
@@ -283,31 +294,35 @@ class ServiceReportController extends Controller
         $customer = \App\Models\Customer::find($validated['customer_id']);
         $validated['customer_name'] = trim($customer->first_name . ' ' . $customer->last_name);
 
-        $service->update($validated);
+        [$bill, $amountChanged] = DB::transaction(function () use ($service, $request, $validated) {
+            \App\Models\ServiceReport::whereKey($service->id)->lockForUpdate()->firstOrFail();
+            $service->refresh();
+            $service->update($validated);
+            $previousDetails = $service->details;
+            $partsTotalCost = $this->processParts($service, $request->input('parts', []), false);
+            $labor = $validated['labor_cost'] ?? ($previousDetails?->labor ?? 0);
+            $miscCost = $validated['miscellaneous_cost'] ?? ($previousDetails?->miscellaneous_cost ?? 0);
 
-        // Process Parts & Inventory Sync
-        $partsTotalCost = $service->details ? $service->details->parts_total_charge : 0;
-        $partsInput = $request->input('parts', []);
-        $partsTotalCost = $this->processParts($service, $partsInput, false);
-
-        // Update or Create ServiceDetail
-        $techs = isset($validated['technicians']) ? implode(', ', $validated['technicians']) : null;
-        $labor = $request->labor_cost ?? ($service->details ? $service->details->labor : 0);
-        $miscCost = $request->miscellaneous_cost ?? ($service->details ? $service->details->miscellaneous_cost : 0);
-        $totalAmount = $labor + $partsTotalCost + $miscCost;
-
-        ServiceDetail::updateOrCreate(
-            ['report_id' => $service->id],
-            [
+            $details = ServiceDetail::updateOrCreate(['report_id' => $service->id], [
                 'complaint' => $validated['problem_desc'],
                 'labor' => $labor,
                 'parts_total_charge' => $partsTotalCost,
                 'miscellaneous_cost' => $miscCost,
                 'service_types' => $validated['service_types'] ?? [],
-                'total_amount' => $totalAmount,
-                'technician' => $techs,
-            ]
-        );
+                'total_amount' => $labor + $partsTotalCost + $miscCost + ($previousDetails?->pullout_delivery ?? 0),
+                'technician' => isset($validated['technicians']) ? implode(', ', $validated['technicians']) : null,
+            ]);
+
+            return app(ServiceBillingService::class)->syncPendingBill($service, $details);
+        });
+
+        if ($service->status === 'Cancelled') {
+            foreach ($service->transactions()->whereNotNull('paymongo_link_id')->get() as $transaction) {
+                app(PayMongoPaymentService::class)->ensurePaymentLink($transaction);
+            }
+        } elseif ($bill) {
+            app(PayMongoPaymentService::class)->ensurePaymentLink($bill, $amountChanged);
+        }
 
         // Trigger Notification to all users
         $users = User::all();
@@ -322,6 +337,9 @@ class ServiceReportController extends Controller
         // Bypass $fillable: deleted_by should not be user-input controlled.
         $service->forceFill(['deleted_by' => auth()->id()])->save();
         $service->delete();
+        foreach ($service->transactions as $transaction) {
+            app(PayMongoPaymentService::class)->ensurePaymentLink($transaction);
+        }
         return redirect()->route('services.index')->with('success', 'Service Report deleted successfully.');
     }
 
@@ -344,7 +362,12 @@ class ServiceReportController extends Controller
 
     public function print(\App\Models\ServiceReport $service)
     {
-        $service->load(['details', 'appliance', 'parts', 'transactions']);
+        $service->load([
+            'details',
+            'appliance',
+            'parts' => fn ($q) => $q->orderByPivot('created_at', 'desc')->orderByPivot('id', 'desc'),
+            'transactions' => fn ($q) => $q->latest()->orderByDesc('id'),
+        ]);
         return view('services.print', compact('service'));
     }
 }

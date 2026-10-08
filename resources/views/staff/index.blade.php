@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">User Management</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Manage team members and their roles</p>
+                <h2 class="ui-page-title">User Management</h2>
+                <p class="ui-page-subtitle">Manage team members and their roles</p>
             </div>
             <a href="{{ route('staff.create') }}"
                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Search -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
+        <div class="ui-card p-4">
             <form method="GET" action="{{ route('staff.index') }}" class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@
         <!-- Table -->
         <div class="ui-card overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="ui-table">
                     <thead class="bg-gray-50 dark:bg-slate-700/50">
                         <tr>
                             <th scope="col"
@@ -103,17 +103,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($member->status == 'Active')
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Active
-                                        </span>
-                                    @else
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-100">
-                                            Inactive
-                                        </span>
-                                    @endif
+                                    <x-status-badge :status="$member->status == 'Active' ? 'Active' : 'Inactive'" />
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-3">
@@ -175,16 +165,16 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
 
-    <!-- Pagination -->
-    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between">
-        <div class="text-sm text-gray-500 dark:text-slate-400">
-            Showing <span class="font-medium">{{ $staff->firstItem() }}</span> to
-            <span class="font-medium">{{ $staff->lastItem() }}</span> of
-            <span class="font-medium">{{ $staff->total() }}</span> entries
+            <!-- Pagination -->
+            <div class="ui-pagination">
+                <div class="text-sm text-gray-500 dark:text-slate-400">
+                    Showing <span class="font-medium">{{ $staff->firstItem() ?: 0 }}</span> to
+                    <span class="font-medium">{{ $staff->lastItem() ?: 0 }}</span> of
+                    <span class="font-medium">{{ $staff->total() }}</span> entries
+                </div>
+                <div>{{ $staff->links() }}</div>
+            </div>
         </div>
-        <div>{{ $staff->links() }}</div>
     </div>
 </x-app-layout>

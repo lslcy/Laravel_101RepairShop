@@ -1,19 +1,26 @@
 <header
-    class="h-14 bg-blue-700 dark:bg-slate-800 text-white border-b border-blue-800 dark:border-slate-700 flex items-center justify-between px-6 sticky top-0 z-40">
+    class="h-14 shrink-0 bg-blue-700 dark:bg-slate-800 text-white border-b border-blue-800 dark:border-slate-700 flex items-center justify-between gap-3 px-4 sm:px-6 sticky top-0 z-40">
     <!-- Module Title + Greeting -->
-    <div class="flex flex-col justify-center">
-        <h1 class="text-sm font-semibold text-white leading-tight">
+    <div class="flex min-w-0 items-center gap-3">
+        <button id="sidebar-toggle" type="button" @click="sidebarOpen = true; $nextTick(() => document.getElementById('app-sidebar').focus())"
+            :aria-expanded="sidebarOpen" aria-controls="app-sidebar" aria-label="Open navigation"
+            class="shrink-0 rounded-md p-1.5 text-blue-100 hover:bg-blue-600 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white lg:hidden">
+            <svg class="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <div class="flex min-w-0 flex-col justify-center">
+        <h1 class="truncate text-sm font-semibold text-white leading-tight">
             {{ $pageTitle ?? '101 Repair Service' }}
         </h1>
-        <p class="text-xs text-blue-200 leading-tight mt-0.5">
+        <p class="hidden truncate text-xs text-blue-200 leading-tight mt-0.5 sm:block">
             Welcome, {{ auth()->user()->full_name ?? auth()->user()->name ?? 'Guest' }}
             &nbsp;·&nbsp;
             {{ now()->format('l, F j, Y') }}
         </p>
+        </div>
     </div>
 
     <!-- Right Side Actions -->
-    <div class="flex items-center space-x-6">
+    <div class="flex shrink-0 items-center space-x-3 sm:space-x-6">
         <!-- Font Size Toggle -->
         <div class="relative flex items-center justify-center" x-data="{ fontOpen: false }">
             <button @click="fontOpen = !fontOpen" @click.away="fontOpen = false"

@@ -37,6 +37,7 @@ class CustomerController extends Controller
             }
         })
             ->latest()
+            ->orderByDesc('id')
             ->paginate(25)
             ->withQueryString();
 
@@ -90,15 +91,17 @@ class CustomerController extends Controller
 
     public function show(\App\Models\Customer $customer)
     {
-        $customer->load(['appliances', 'serviceReports' => function ($q) {
-            $q->latest()->with('appliance');
-        }]);
+        $customer->load([
+            'appliances' => fn ($q) => $q->latest()->orderByDesc('id'),
+            'serviceReports' => fn ($q) => $q->latest()->orderByDesc('id')->with('appliance'),
+        ]);
         return view('customers.show', compact('customer'));
     }
 
     public function edit(\App\Models\Customer $customer)
     {
         $this->checkCustomerAccess();
+        $customer->load(['appliances' => fn ($q) => $q->latest()->orderByDesc('id')]);
         return view('customers.edit', compact('customer'));
     }
 

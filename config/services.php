@@ -41,5 +41,10 @@ return [
         'anon_key' => env('SUPABASE_ANON_KEY'),
     ],
 
-];
+    'paymongo' => [
+        'secret_key' => env('PAYMONGO_SECRET_KEY'),
+        'minimum_amount' => env('PAYMONGO_MINIMUM_AMOUNT', 100),
+        'timeout' => env('PAYMONGO_TIMEOUT', 10),
+    ],
 
+];

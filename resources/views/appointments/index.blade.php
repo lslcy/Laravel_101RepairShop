@@ -1,42 +1,15 @@
 <x-app-layout>
-    @php
-        $statusStyles = [
-            'Pending' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border dark:border-amber-800/50',
-            'Confirmed' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border dark:border-blue-800/50',
-            'Completed' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border dark:border-green-800/50',
-            'Cancelled' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border dark:border-red-800/50',
-        ];
-        $cardAccents = [
-            'Pending' => 'text-amber-600 dark:text-amber-400',
-            'Confirmed' => 'text-blue-600 dark:text-blue-400',
-            'Completed' => 'text-green-600 dark:text-green-400',
-            'Cancelled' => 'text-red-600 dark:text-red-400',
-        ];
-    @endphp
-
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Appointments</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Bookings made by customers from the mobile app</p>
+                <h2 class="ui-page-title">Appointments</h2>
+                <p class="ui-page-subtitle">Bookings made by customers from the mobile app</p>
             </div>
         </div>
 
-        <!-- Status summary -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            @foreach(\App\Models\Appointment::STATUSES as $s)
-                <a href="{{ route('appointments.index', array_merge(request()->except('page'), ['status' => $status === $s ? null : $s])) }}"
-                    id="appointment-status-card-{{ strtolower($s) }}"
-                    class="bg-white dark:bg-slate-800 p-4 rounded-lg border shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 {{ $status === $s ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-200 dark:border-slate-700' }}">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400">{{ $s }}</p>
-                    <p class="mt-1 text-2xl font-bold {{ $cardAccents[$s] }}">{{ $counts[$s] ?? 0 }}</p>
-                </a>
-            @endforeach
-        </div>
-
         <!-- Filters -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
+        <div class="ui-card p-4">
             <form method="GET" action="{{ route('appointments.index') }}" class="flex flex-col md:flex-row gap-4" id="appointmentFilterForm">
                 <div class="relative flex-1">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -44,10 +17,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
+                    <label for="appointment-search" class="sr-only">Search appointments</label>
                     <input type="text" name="search" id="appointment-search" value="{{ $search }}"
                         class="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         placeholder="Search by customer, appliance, title or notes...">
                 </div>
+                <label for="appointment-status-filter" class="sr-only">Appointment status</label>
                 <select name="status" id="appointment-status-filter" onchange="this.form.submit()"
                     class="block w-full md:w-auto py-2 pl-3 pr-8 border border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <option value="">All Statuses</option>
@@ -55,6 +30,7 @@
                         <option value="{{ $s }}" {{ $status === $s ? 'selected' : '' }}>{{ $s }}</option>
                     @endforeach
                 </select>
+                <label for="appointment-date-filter" class="sr-only">Appointment date</label>
                 <input type="date" name="date" id="appointment-date-filter" value="{{ $date }}" onchange="this.form.submit()"
                     class="block w-full md:w-auto py-2 px-3 border border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 @if($search || $status || $date)
@@ -67,16 +43,16 @@
         </div>
 
         <!-- Table -->
-        <div class="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                <table class="ui-table">
                     <thead class="bg-gray-50 dark:bg-slate-700/50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Schedule</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Customer</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Request</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
+                            <th scope="col" class="px-6 py-3 text-left">Schedule</th>
+                            <th scope="col" class="px-6 py-3 text-left">Customer</th>
+                            <th scope="col" class="px-6 py-3 text-left">Request</th>
+                            <th scope="col" class="px-6 py-3 text-left">Status</th>
+                            <th scope="col" class="px-6 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
@@ -85,7 +61,7 @@
                                 $isOpen = in_array($appointment->status, ['Pending', 'Confirmed']);
                                 $isOverdue = $isOpen && $appointment->appointment_date && $appointment->appointment_date->isPast() && !$appointment->appointment_date->isToday();
                             @endphp
-                            <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors" id="appointment-row-{{ $appointment->id }}">
+                            <tr class="table-row-hover" id="appointment-row-{{ $appointment->id }}">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
                                         {{ $appointment->appointment_date?->timezone(config('app.timezone'))->format('M d, Y') ?? '—' }}
@@ -120,9 +96,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusStyles[$appointment->status] ?? 'bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-slate-300' }}">
-                                        {{ $appointment->status ?? 'Pending' }}
-                                    </span>
+                                    <x-status-badge :status="$appointment->status ?? 'Pending'" />
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-2">
@@ -191,7 +165,7 @@
                 </table>
             </div>
 
-            <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between">
+            <div class="ui-pagination">
                 <div class="text-sm text-gray-500 dark:text-slate-400">
                     Showing <span class="font-medium">{{ $appointments->firstItem() ?: 0 }}</span> to
                     <span class="font-medium">{{ $appointments->lastItem() ?: 0 }}</span> of

@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div class="w-full mx-auto space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Edit Customer</h2>
+        <div class="ui-page-header">
+            <h2 class="ui-page-title">Edit Customer</h2>
             <a href="{{ route('customers.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,7 +283,7 @@
                 <!-- Existing Appliances List -->
                 @if($customer->appliances->count() > 0)
                     <div class="overflow-x-auto mb-6">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="ui-table">
                             <thead class="bg-gray-50 dark:bg-slate-700/50">
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Appliance Type</th>

@@ -13,40 +13,41 @@ class DashboardController extends Controller
         $endOfWeek = now()->endOfWeek();
 
         $weeklyCustomers = \App\Models\Customer::whereBetween('created_at', [$startOfWeek, $endOfWeek])->count();
-        $weeklyIncome = \App\Models\Transaction::whereBetween('created_at', [$startOfWeek, $endOfWeek])->sum('total_amount');
+        $weeklyIncome = $this->receivedIncomeBetween($startOfWeek, $endOfWeek);
         $weeklyServices = \App\Models\ServiceReport::whereBetween('date_in', [$startOfWeek, $endOfWeek])->count();
+        $pendingAppointments = \App\Models\Appointment::where('status', 'Pending')->count();
 
         // Previous Week Stats (for growth rate)
         $prevStart = now()->subWeek()->startOfWeek();
         $prevEnd = now()->subWeek()->endOfWeek();
 
         $prevCustomers = \App\Models\Customer::whereBetween('created_at', [$prevStart, $prevEnd])->count();
-        $prevIncome = \App\Models\Transaction::whereBetween('created_at', [$prevStart, $prevEnd])->sum('total_amount');
+        $prevIncome = $this->receivedIncomeBetween($prevStart, $prevEnd);
         $prevServices = \App\Models\ServiceReport::whereBetween('date_in', [$prevStart, $prevEnd])->count();
 
         // Calculate growth rates
         $customerGrowth = $prevCustomers > 0 ? round((($weeklyCustomers - $prevCustomers) / $prevCustomers) * 100) : ($weeklyCustomers > 0 ? 100 : 0);
         $incomeGrowth = $prevIncome > 0 ? round((($weeklyIncome - $prevIncome) / $prevIncome) * 100) : ($weeklyIncome > 0 ? 100 : 0);
         $serviceGrowth = $prevServices > 0 ? round((($weeklyServices - $prevServices) / $prevServices) * 100) : ($weeklyServices > 0 ? 100 : 0);
-        $overallGrowth = ($customerGrowth + $incomeGrowth + $serviceGrowth) > 0
-            ? round(($customerGrowth + $incomeGrowth + $serviceGrowth) / 3)
-            : 0;
 
         // Low Stock Parts (Threshold < 10)
         $lowStockParts = \App\Models\Part::where('quantity_stock', '<', 10)
-            ->orderBy('quantity_stock', 'asc')
+            ->latest()
+            ->orderByDesc('id')
             ->limit(5)
             ->get();
 
         // Recent Services for activity feed
         $recentServices = \App\Models\ServiceReport::with(['customer', 'appliance'])
             ->latest()
+            ->orderByDesc('id')
             ->limit(5)
             ->get();
 
         // Recent Transactions (Limit 5)
         $recentTransactions = \App\Models\Transaction::with(['report.customer'])
             ->latest()
+            ->orderByDesc('id')
             ->limit(5)
             ->get();
 
@@ -127,14 +128,22 @@ class DashboardController extends Controller
             'weeklyCustomers',
             'weeklyIncome',
             'weeklyServices',
+            'pendingAppointments',
             'lowStockParts',
             'recentTransactions',
             'recentServices',
             'customerGrowth',
             'incomeGrowth',
             'serviceGrowth',
-            'overallGrowth',
             'chartData'
         ));
+    }
+
+    private function receivedIncomeBetween($start, $end): float
+    {
+        $transactions = \App\Models\Transaction::whereBetween('created_at', [$start, $end]);
+
+        return (clone $transactions)->where('payment_status', 'Paid')->sum('total_amount')
+            + (clone $transactions)->where('payment_status', 'Partial')->sum('partial_payment_amount');
     }
 }

@@ -1,4 +1,10 @@
-<aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen fixed left-0 top-0 z-50">
+<aside id="app-sidebar" tabindex="-1" aria-label="Main navigation" :inert="isMobile && !sidebarOpen"
+    :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
+    class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen fixed left-0 top-0 z-50 -translate-x-full transform transition-transform duration-200 lg:translate-x-0">
+    <button type="button" @click="sidebarOpen = false; $nextTick(() => document.getElementById('sidebar-toggle').focus())" aria-label="Close navigation"
+        class="absolute right-3 top-3 rounded-md p-2 text-slate-300 hover:bg-slate-800 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:hidden">
+        <svg class="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M6 18L18 6" /></svg>
+    </button>
     <!-- Logo -->
     <div class="flex items-center justify-center px-4 py-4 border-b border-slate-800">
         <a href="{{ route('dashboard') }}" class="flex items-center justify-center w-full">

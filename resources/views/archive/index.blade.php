@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="space-y-6" x-data="{
+    <div class="ui-page" x-data="{
         showDeleteModal: false,
         deleteUrl: '',
         deletePassword: '',
@@ -10,15 +10,15 @@
         }
     }">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Archive Records</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">View and restore archived items</p>
+                <h2 class="ui-page-title">Archive Records</h2>
+                <p class="ui-page-subtitle">View and restore archived items</p>
             </div>
         </div>
 
         <!-- Search & Filter -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm space-y-4">
+        <div class="ui-card p-4 space-y-4">
             <form method="GET" action="{{ route('archive.index') }}" class="flex flex-col sm:flex-row gap-4">
                 <input type="hidden" name="type" value="{{ $type }}">
                 <div class="relative flex-1">
@@ -33,7 +33,7 @@
                         placeholder="Search archive...">
                 </div>
                 <!-- Filter Tabs -->
-                <div class="flex space-x-2">
+                <div class="flex flex-wrap gap-2">
                     <a href="{{ route('archive.index', ['type' => 'all', 'search' => $search]) }}"
                         class="px-4 py-2 text-sm font-medium rounded-lg transition-colors {{ $type == 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-200' }}">
                         All
@@ -81,7 +81,7 @@
             <!-- Table -->
             <div class="ui-card overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="ui-table">
                         <thead class="bg-gray-50 dark:bg-slate-700/50">
                             <tr>
                                 <th scope="col"
@@ -153,8 +153,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="px-6 py-4 border-t border-gray-200 dark:border-slate-600">
-                    {{ $paginatedArchives->links() }}
+                <div class="ui-pagination">
+                    <div class="w-full">{{ $paginatedArchives->links() }}</div>
                     <!-- Note: Pagination links might need custom view for Tailwind, usually handled globally in AppServiceProvider or vendor:publish -->
                 </div>
             </div>

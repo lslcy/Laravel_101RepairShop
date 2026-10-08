@@ -1,27 +1,16 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Service Report #{{ $service->id }}</h2>
-                <div class="mt-1 flex items-center space-x-4 text-sm text-gray-500 dark:text-slate-400">
+                <h2 class="ui-page-title">Service Report #{{ $service->id }}</h2>
+                <div class="ui-page-subtitle flex flex-wrap items-center gap-4">
                     <span>Date In: {{ $service->date_in ? $service->date_in->format('M d, Y') : 'N/A' }}</span>
                     <span>&bull;</span>
-                    @php
-                        $statusClass = match ($service->status) {
-                            'Completed' => 'bg-green-100 text-green-800',
-                            'Pending' => 'bg-yellow-100 text-yellow-800',
-                            'In Progress' => 'bg-blue-100 text-blue-800',
-                            'Cancelled' => 'bg-red-100 text-red-800',
-                            default => 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-100',
-                        };
-                    @endphp
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                        {{ $service->status }}
-                    </span>
+                    <x-status-badge :status="$service->status" />
                 </div>
             </div>
-            <div class="flex space-x-3">
+            <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('services.print', $service) }}" target="_blank"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     <svg class="w-5 h-5 mr-2 -ml-1 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +39,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Details Card -->
                 <div class="ui-card overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Appliance Details</h3>
                     </div>
                     <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -101,7 +90,7 @@
                             <div class="sm:col-span-2">
                                 <dt class="text-sm font-medium text-gray-500 dark:text-slate-400">Inventory Parts Used</dt>
                                 <dd class="mt-1 border border-gray-200 dark:border-slate-600 rounded-md overflow-hidden bg-white dark:bg-slate-800">
-                                    <table class="min-w-full divide-y divide-gray-200">
+                                    <table class="ui-table">
                                         <thead class="bg-gray-50 dark:bg-slate-700/50">
                                             <tr>
                                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-slate-400">Part No. / Name</th>
@@ -163,20 +152,11 @@
                                         @foreach($assignedTechs as $techName)
                                             @php
                                                 $status = $techStatusMap[strtolower($techName)] ?? 'Unknown';
-                                                $statusKey = strtolower($status);
-                                                $badgeClass = match ($statusKey) {
-                                                    'available' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800/50',
-                                                    'busy' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800/50',
-                                                    'off-duty' => 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
-                                                    default => 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300 border border-gray-200 dark:border-gray-600',
-                                                };
                                             @endphp
 
-                                            <span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600">
+                                            <span class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600">
                                                 <span class="font-medium">{{ $techName }}</span>
-                                                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-semibold {{ $badgeClass }}">
-                                                    {{ $status }}
-                                                </span>
+                                                <x-status-badge :status="$status" />
                                             </span>
                                         @endforeach
                                     </div>
@@ -244,7 +224,7 @@
 
                 <!-- Comments Section -->
                 <div class="ui-card overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Progress Log & Comments</h3>
                     </div>
                     <div class="p-6">
@@ -303,7 +283,7 @@
             <div class="space-y-6">
                 <!-- Customer Card -->
                 <div class="ui-card overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customer Info</h3>
                     </div>
                     <div class="p-6">
@@ -357,14 +337,14 @@
 
                 <!-- Payments Card -->
                 <div class="ui-card overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50 flex justify-between items-center">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Payments</h3>
                         @if(in_array(auth()->user()->role, ['Administrator', 'Cashier']))
                             @if($service->status === 'Completed')
-                                @if($service->transactions->count() == 0)
+                                @if($service->transactions->where('payment_status', 'Paid')->isEmpty())
                                     <a href="{{ route('transactions.create', ['report_id' => $service->id]) }}"
                                         class="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 hover:underline">
-                                        + Add Payment
+                                        Record Payment
                                     </a>
                                 @endif
                             @else
@@ -378,7 +358,7 @@
                     </div>
                     <div class="p-0">
                         @if($service->transactions->count() > 0)
-                            <table class="min-w-full divide-y divide-gray-100">
+                            <table class="ui-table">
                                 <thead class="bg-gray-50 dark:bg-slate-700/50">
                                     <tr>
                                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-slate-400">Total</th>
@@ -391,10 +371,7 @@
                                             <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">
                                                 ₱{{ number_format($transaction->total_amount, 2) }}</td>
                                             <td class="px-4 py-2 text-right">
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $transaction->payment_status == 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                                    {{ $transaction->payment_status }}
-                                                </span>
+                                                <x-status-badge :status="$transaction->payment_status" />
                                             </td>
                                         </tr>
                                     @endforeach

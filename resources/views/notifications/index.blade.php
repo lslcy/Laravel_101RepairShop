@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">All Notifications</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">View your recent notifications and activity alerts</p>
+                <h2 class="ui-page-title">All Notifications</h2>
+                <p class="ui-page-subtitle">View your recent notifications and activity alerts</p>
             </div>
             @if(auth()->user()->unreadNotifications->count() > 0)
             <form action="{{ route('notifications.markRead') }}" method="POST">
@@ -55,8 +55,8 @@
                 
                 <!-- Pagination -->
                 @if($notifications->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800">
-                    {{ $notifications->links() }}
+                <div class="ui-pagination">
+                    <div class="w-full">{{ $notifications->links() }}</div>
                 </div>
                 @endif
             @else

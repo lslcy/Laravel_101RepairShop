@@ -20,6 +20,7 @@ class StaffController extends Controller
         ->orWhere('username', 'ilike', "%$search%")
         ->orWhere('email', 'ilike', "%$search%"))
             ->latest()
+            ->orderByDesc('id')
             ->paginate(25)
             ->withQueryString();
         return view('staff.index', compact('staff', 'search'));

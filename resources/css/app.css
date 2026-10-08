@@ -21,6 +21,14 @@
  */
 
 @layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    body {
+        @apply font-sans;
+    }
+
     /* ── Dark mode form inputs ── */
     .dark input:not([type='checkbox']):not([type='radio']),
     .dark textarea,
@@ -46,4 +54,84 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
     .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
     .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+}
+
+@layer components {
+    .ui-page {
+        @apply w-full min-w-0 space-y-6;
+    }
+
+    .ui-page-header {
+        @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .ui-page-title {
+        @apply text-2xl font-bold tracking-tight text-gray-900 dark:text-white;
+    }
+
+    .ui-page-subtitle {
+        @apply mt-1 text-sm text-gray-500 dark:text-slate-400;
+    }
+
+    .ui-card {
+        @apply rounded-lg border border-gray-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800;
+    }
+
+    .ui-table {
+        @apply min-w-full divide-y divide-gray-200 dark:divide-slate-700;
+    }
+
+    .ui-table > thead {
+        @apply bg-gray-50 dark:bg-slate-700/50;
+    }
+
+    .ui-table > thead > tr > th {
+        @apply text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400;
+    }
+
+    .ui-table > tbody {
+        @apply divide-y divide-gray-200 bg-white dark:divide-slate-700 dark:bg-slate-800;
+    }
+
+    .table-row-hover,
+    .ui-table > tbody > tr {
+        @apply transition-colors hover:bg-gray-50 dark:hover:bg-slate-700/50;
+    }
+
+    .ui-pagination {
+        @apply flex flex-col gap-4 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-700/50 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .ui-status-badge {
+        @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-current bg-white px-2 py-0.5 align-middle text-xs font-medium leading-5 shadow-sm dark:bg-slate-800;
+    }
+
+    .ui-status-badge::before {
+        content: '';
+        width: 0.375rem;
+        height: 0.375rem;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background-color: currentColor;
+    }
+
+    .ui-status-success {
+        @apply text-emerald-600 dark:text-emerald-400;
+    }
+
+    .ui-status-warning {
+        @apply text-amber-600 dark:text-amber-400;
+    }
+
+    .ui-status-danger {
+        @apply text-red-500 dark:text-red-400;
+    }
+
+    .ui-status-info {
+        @apply text-blue-600 dark:text-blue-400;
+    }
+
+    .ui-status-neutral {
+        @apply text-slate-500 dark:text-slate-400;
+    }
 }

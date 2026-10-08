@@ -1,12 +1,12 @@
 <x-app-layout>
-    <div class="w-full mx-auto py-6 sm:px-6 lg:px-8 space-y-6">
+    <div class="ui-page">
         <!-- Header Section -->
-        <div class="bg-white dark:bg-gray-800 shadow sm:rounded-tl-xl sm:rounded-tr-xl overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="h-32 bg-blue-600"></div>
             <div class="px-8 flex flex-col sm:flex-row sm:items-end justify-between -mt-12 pb-6">
                 <div class="flex flex-col sm:flex-row sm:items-start gap-5">
                     <div
-                        class="h-24 w-24 shrink-0 rounded-full border-4 border-white dark:border-gray-800 bg-white dark:bg-slate-800 flex items-center justify-center text-blue-600 dark:text-blue-400 text-3xl font-bold uppercase shadow-md overflow-hidden">
+                        class="h-24 w-24 shrink-0 rounded-full border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800 flex items-center justify-center text-blue-600 dark:text-blue-400 text-3xl font-bold uppercase shadow-md overflow-hidden">
                         @if($user->avatar)
                             <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}"
                                 class="h-full w-full object-cover">
@@ -15,9 +15,9 @@
                         @endif
                     </div>
                     <div class="mt-4 sm:mt-12 sm:ml-2 flex flex-col pt-1">
-                        <h1 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</h1>
+                        <h1 class="ui-page-title">{{ $user->name }}</h1>
 
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-xl">
+                        <p class="ui-page-subtitle max-w-xl">
                             {{ $user->bio ?? 'Experienced professional managing operations.' }}
                         </p>
                     </div>
@@ -38,7 +38,7 @@
         <!-- Info Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Personal Information -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl p-6">
+            <div class="ui-card p-6">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Personal Information</h3>
                 <dl class="space-y-4">
                     <div>
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Account Details -->
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl p-6">
+            <div class="ui-card p-6">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Account Details</h3>
                 <dl class="space-y-4">
                     <div>
@@ -93,7 +93,7 @@
 
         <!-- Stats Row -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl p-5 flex items-center">
+            <div class="ui-card p-5 flex items-center">
                 <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-200 mr-4">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl p-5 flex items-center">
+            <div class="ui-card p-5 flex items-center">
                 <div class="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-200 mr-4">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl p-5 flex items-center">
+            <div class="ui-card p-5 flex items-center">
                 <div
                     class="p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-200 mr-4">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,7 +135,7 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl p-5 flex items-center">
+            <div class="ui-card p-5 flex items-center">
                 <div
                     class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-200 mr-4">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,8 +151,8 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white dark:bg-gray-800 shadow sm:rounded-xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+        <div class="ui-card overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">Recent Activity</h3>
             </div>
             <ul class="divide-y divide-gray-100 dark:divide-gray-700">

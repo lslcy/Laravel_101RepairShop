@@ -7,14 +7,14 @@
             }
         }
     </style>
-    <div class="space-y-6 print:p-8">
+    <div class="ui-page print:p-8">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 print:hidden">
+        <div class="ui-page-header print:hidden">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Transactions</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">View and manage financial transactions</p>
+                <h2 class="ui-page-title">Transactions</h2>
+                <p class="ui-page-subtitle">View and manage financial transactions</p>
             </div>
-            <div class="flex space-x-3">
+            <div class="flex flex-wrap items-center gap-3">
                 <button onclick="window.print()"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     <svg class="w-5 h-5 mr-2 -ml-1 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@
                 </button>
                 @if(in_array(auth()->user()->role, ['Administrator', 'Secretary']))
                     <a href="{{ route('transactions.create') }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-900 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                         <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
@@ -37,7 +37,7 @@
         </div>
 
         <!-- Filters & Search (Always Visible) -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm print:hidden">
+        <div class="ui-card p-4 print:hidden">
             <form method="GET" action="{{ route('transactions.index') }}" class="flex flex-col md:flex-row gap-4" id="filterForm">
                 
                 <!-- Search -->
@@ -107,9 +107,9 @@
 
             <!-- Table -->
             <div
-                class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden print:shadow-none print:border-none print:rounded-none">
+                class="ui-card overflow-hidden print:shadow-none print:border-none print:rounded-none">
                 <div class="overflow-x-auto print:overflow-visible">
-                    <table class="min-w-full divide-y divide-gray-200 print:w-full">
+                    <table class="ui-table print:w-full">
                         <thead class="bg-gray-50 dark:bg-slate-700/50">
                             <tr>
                                 <th scope="col"
@@ -152,7 +152,7 @@
                         </thead>
                         <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200" id="transactionsTableBody">
                             @forelse($transactions as $transaction)
-                                <tr class="hover:bg-gray-50 dark:bg-slate-700/50 transition-colors">
+                                <tr class="table-row-hover">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                         #{{ $transaction->id }}
                                     </td>
@@ -172,18 +172,7 @@
                                         ₱{{ number_format($transaction->total_amount, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @php
-                                            $statusClass = match ($transaction->payment_status) {
-                                                'Paid' => 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border dark:border-green-800/50',
-                                                'Unpaid', 'Pending' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border dark:border-red-800/50',
-                                                'Partial' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border dark:border-yellow-800/50',
-                                                default => 'bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-slate-300 border dark:border-slate-600',
-                                            };
-                                        @endphp
-                                        <span
-                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                            {{ $transaction->payment_status }}
-                                        </span>
+                                        <x-status-badge :status="$transaction->payment_status" />
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                         {{ $transaction->payment_date ? \Carbon\Carbon::parse($transaction->payment_date)->format('M d, Y') : '—' }}
@@ -267,7 +256,7 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between print:hidden">
+                <div class="ui-pagination print:hidden">
                     <div class="text-sm text-gray-500 dark:text-slate-400">
                         Showing <span class="font-medium">{{ $transactions->firstItem() ?: 0 }}</span> to
                         <span class="font-medium">{{ $transactions->lastItem() ?: 0 }}</span> of
@@ -286,12 +275,12 @@
                 visibility: hidden;
             }
 
-            .space-y-6,
-            .space-y-6 * {
+            .ui-page,
+            .ui-page * {
                 visibility: visible;
             }
 
-            .space-y-6 {
+            .ui-page {
                 position: absolute;
                 left: 0;
                 top: 0;

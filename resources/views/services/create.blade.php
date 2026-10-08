@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="w-full mx-auto space-y-6" x-data="{
+    <div class="ui-page" x-data="{
         customers: {{ Js::from($customers) }},
         parts: {{ Js::from($parts) }},
         servicePrices: {{ Js::from($servicePrices) }},
@@ -84,7 +84,7 @@
             if (existingIndex !== -1) {
                 this.selectedParts[existingIndex].quantity += parseInt(this.partQuantity);
             } else {
-                this.selectedParts.push({
+                this.selectedParts.unshift({
                     id: part.id,
                     name: part.name,
                     part_no: part.part_no,
@@ -123,8 +123,8 @@
         }
     }">
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Service Report</h2>
+        <div class="ui-page-header">
+            <h2 class="ui-page-title">Create New Service Report</h2>
             <a href="{{ route('services.index') }}"
                 class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,7 +136,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="ui-card overflow-hidden">
             <div class="p-6">
                 <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
@@ -265,15 +265,9 @@
                                                         <span class="text-xs text-gray-500 dark:text-slate-400" x-text="tech.role_title || 'Technician'"></span>
 
                                                         <!-- Status Badges -->
-                                                        <span x-show="(tech.availability_status || '').toLowerCase() === 'available'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800/50">
-                                                            Available
-                                                        </span>
-                                                        <span x-show="(tech.availability_status || '').toLowerCase() === 'busy'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800/50">
-                                                            Busy
-                                                        </span>
-                                                        <span x-show="(tech.availability_status || '').toLowerCase() === 'off-duty'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
-                                                            Off-Duty
-                                                        </span>
+                                                        <x-status-badge status="Available" x-show="(tech.availability_status || '').toLowerCase() === 'available'" />
+                                                        <x-status-badge status="Busy" x-show="(tech.availability_status || '').toLowerCase() === 'busy'" />
+                                                        <x-status-badge status="Off-Duty" x-show="(tech.availability_status || '').toLowerCase() === 'off-duty'" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -452,7 +446,7 @@
                             <!-- Parts Table -->
                             <div x-show="selectedParts.length > 0"
                                 class="mt-4 border border-gray-200 dark:border-slate-600 rounded-md overflow-hidden bg-white dark:bg-slate-800">
-                                <table class="min-w-full divide-y divide-gray-200">
+                                <table class="ui-table">
                                     <thead class="bg-gray-50 dark:bg-slate-700/50">
                                         <tr>
                                             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-slate-400">Part No.

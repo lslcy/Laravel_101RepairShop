@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Parts Inventory</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Manage spare parts and inventory</p>
+                <h2 class="ui-page-title">Parts Inventory</h2>
+                <p class="ui-page-subtitle">Manage spare parts and inventory</p>
             </div>
             <a href="{{ route('inventory.create') }}"
                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
@@ -67,7 +67,7 @@
         <!-- Table -->
         <div class="ui-card overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="ui-table">
                     <thead class="bg-gray-50 dark:bg-slate-700/50">
                         <tr>
                             <th scope="col"
@@ -95,36 +95,28 @@
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200" id="inventoryTableBody">
                         @forelse($parts as $part)
                         @php
-                        $qty = $part->quantity_stock;
-                        $maxDisplay = 50;
-                        $barPercent = min(100, ($qty / $maxDisplay) * 100);
-                        if ($qty === 0) {
-                        $statusLabel = 'Out of Stock';
-                        $statusColor = 'text-red-700 dark:text-red-400';
-                        $bgBadge = 'bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800';
-                        $barColor = 'bg-red-500';
-                        $dotColor = 'bg-red-500 animate-pulse';
-                        } elseif ($qty < 5) {
-                            $statusLabel='Critical' ;
-                            $statusColor='text-red-700 dark:text-red-400' ;
-                            $bgBadge='bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800' ;
-                            $barColor='bg-red-500' ;
-                            $dotColor='bg-red-500 animate-pulse' ;
+                            $qty = $part->quantity_stock;
+                            $maxDisplay = 50;
+                            $barPercent = min(100, ($qty / $maxDisplay) * 100);
+                            if ($qty === 0) {
+                                $statusLabel = 'Out of Stock';
+                                $statusTone = 'danger';
+                                $barColor = 'bg-red-500';
+                            } elseif ($qty < 5) {
+                                $statusLabel = 'Critical';
+                                $statusTone = 'danger';
+                                $barColor = 'bg-red-500';
                             } elseif ($qty < 10) {
-                            $statusLabel='Low Stock' ;
-                            $statusColor='text-yellow-700 dark:text-yellow-400' ;
-                            $bgBadge='bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800' ;
-                            $barColor='bg-yellow-500' ;
-                            $dotColor='bg-yellow-500' ;
+                                $statusLabel = 'Low Stock';
+                                $statusTone = 'warning';
+                                $barColor = 'bg-yellow-500';
                             } else {
-                            $statusLabel='In Stock' ;
-                            $statusColor='text-green-700 dark:text-green-400' ;
-                            $bgBadge='bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800' ;
-                            $barColor='bg-green-500' ;
-                            $dotColor='bg-green-500' ;
+                                $statusLabel = 'In Stock';
+                                $statusTone = 'success';
+                                $barColor = 'bg-green-500';
                             }
-                            @endphp
-                            <tr class="table-row-hover">
+                        @endphp
+                        <tr class="table-row-hover">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10 bg-purple-600 rounded-lg flex items-center justify-center text-white">
@@ -149,16 +141,13 @@
                             <!-- Enhanced Stock Indicator -->
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 <div class="flex flex-col gap-1.5 min-w-[155px] mx-auto w-max">
-                                    <!-- Row: dot + qty + badge -->
+                                    <!-- Quantity and stock status -->
                                     <div class="flex items-center justify-center gap-2">
-                                        <span class="inline-block w-2 h-2 rounded-full flex-shrink-0 {{ $dotColor }}"></span>
                                         <span class="text-sm font-semibold text-gray-900 dark:text-white">
                                             {{ $qty }}
                                             <span class="font-normal text-xs text-gray-400 dark:text-slate-500">units</span>
                                         </span>
-                                        <span class="ml-2 text-[11px] font-semibold px-2 py-0.5 rounded-full {{ $bgBadge }} {{ $statusColor }}">
-                                            {{ $statusLabel }}
-                                        </span>
+                                        <x-status-badge :status="$statusLabel" :tone="$statusTone" />
                                     </div>
                                     <!-- Progress bar -->
                                     <div class="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-1.5 overflow-hidden">
@@ -217,7 +206,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 dark:bg-slate-700/50 flex items-center justify-between">
+            <div class="ui-pagination">
                 <div class="text-sm text-gray-500 dark:text-slate-400">
                     Showing <span class="font-medium">{{ $parts->firstItem() ?: 0 }}</span> to
                     <span class="font-medium">{{ $parts->lastItem() ?: 0 }}</span> of

@@ -1,12 +1,12 @@
 <x-app-layout>
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">{{ $customer->first_name }} {{ $customer->last_name }}</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Customer Profile</p>
+                <h2 class="ui-page-title">{{ $customer->first_name }} {{ $customer->last_name }}</h2>
+                <p class="ui-page-subtitle">Customer Profile</p>
             </div>
-            <div class="flex space-x-3">
+            <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('customers.index') }}"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white dark:bg-slate-800 table-row-hover">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Customer Info Card -->
             <div class="ui-card overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Contact Information</h3>
                 </div>
                 <div class="p-6 space-y-4">
@@ -88,12 +88,12 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Appliances -->
                 <div class="ui-card overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Appliances ({{ $customer->appliances->count() }})</h3>
                     </div>
                     @if($customer->appliances->count() > 0)
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="ui-table">
                                 <thead class="bg-gray-50 dark:bg-slate-700/50">
                                     <tr>
                                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Type / Brand</th>
@@ -117,12 +117,12 @@
                                             <td class="px-4 py-3 text-sm">
                                                 @if($app->warranty_end)
                                                     @if(\Carbon\Carbon::parse($app->warranty_end)->isPast())
-                                                        <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Expired</span>
+                                                        <x-status-badge status="Expired" tone="danger" />
                                                     @else
-                                                        <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Active until {{ \Carbon\Carbon::parse($app->warranty_end)->format('M d, Y') }}</span>
+                                                        <x-status-badge :status="'Active until ' . \Carbon\Carbon::parse($app->warranty_end)->format('M d, Y')" tone="success" />
                                                     @endif
                                                 @else
-                                                    <span class="text-xs text-gray-400">No Warranty</span>
+                                                    <x-status-badge status="No Warranty" tone="neutral" />
                                                 @endif
                                             </td>
                                         </tr>
@@ -137,12 +137,12 @@
 
                 <!-- Service History -->
                 <div class="ui-card overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 dark:bg-slate-700/50">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-white">Service History ({{ $customer->serviceReports->count() }})</h3>
                     </div>
                     @if($customer->serviceReports->count() > 0)
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="ui-table">
                                 <thead class="bg-gray-50 dark:bg-slate-700/50">
                                     <tr>
                                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase">Report</th>
@@ -154,20 +154,12 @@
                                 </thead>
                                 <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200">
                                     @foreach($customer->serviceReports as $report)
-                                        @php
-                                            $sc = match($report->status) {
-                                                'Completed' => 'bg-green-100 text-green-800',
-                                                'Pending' => 'bg-yellow-100 text-yellow-800',
-                                                'Cancelled' => 'bg-red-100 text-red-800',
-                                                default => 'bg-blue-100 text-blue-800',
-                                            };
-                                        @endphp
-                                        <tr class="hover:bg-gray-50 dark:bg-slate-700/50">
+                                        <tr class="table-row-hover">
                                             <td class="px-4 py-3 text-sm font-medium text-blue-600 dark:text-blue-400">#{{ $report->id }}</td>
                                             <td class="px-4 py-3 text-sm text-gray-700 dark:text-slate-200">{{ $report->appliance ? $report->appliance->product . ' - ' . $report->appliance->brand : 'N/A' }}</td>
                                             <td class="px-4 py-3 text-sm text-gray-500 dark:text-slate-400">{{ $report->date_in ? $report->date_in->format('M d, Y') : '-' }}</td>
                                             <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $sc }}">{{ $report->status }}</span>
+                                                <x-status-badge :status="$report->status" />
                                             </td>
                                             <td class="px-4 py-3 text-right">
                                                 <a href="{{ route('services.show', $report) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 text-xs font-medium">View</a>

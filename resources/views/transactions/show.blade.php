@@ -1,9 +1,9 @@
 <x-app-layout>
-    <div class="w-full mx-auto space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Transaction #{{ $transaction->id }}</h2>
-            <div class="flex space-x-3">
+        <div class="ui-page-header">
+            <h2 class="ui-page-title">Transaction #{{ $transaction->id }}</h2>
+            <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('transactions.index') }}"
                     class="px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg text-sm font-medium text-gray-700 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     Back to List
@@ -28,18 +28,7 @@
                     </div>
                     <div class="md:text-right">
                         <h3 class="text-sm font-medium text-gray-500 dark:text-slate-400">Payment Status</h3>
-                        @php
-                            $statusClass = match ($transaction->payment_status) {
-                                'Paid' => 'bg-green-100 text-green-800 ring-green-600/20',
-                                'Unpaid' => 'bg-red-100 text-red-800 ring-red-600/10',
-                                'Partial' => 'bg-yellow-100 text-yellow-800 ring-yellow-600/20',
-                                default => 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-100 ring-gray-500/10',
-                            };
-                        @endphp
-                        <span
-                            class="mt-1 inline-flex items-center rounded-md px-3 py-1 text-sm font-medium ring-1 ring-inset {{ $statusClass }}">
-                            {{ $transaction->payment_status }}
-                        </span>
+                        <x-status-badge :status="$transaction->payment_status" class="mt-1" />
                     </div>
                 </div>
 

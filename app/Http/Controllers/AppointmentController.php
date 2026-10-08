@@ -41,17 +41,12 @@ class AppointmentController extends Controller
             })
             ->when($status, fn ($q) => $q->where('status', $status))
             ->when($date, fn ($q) => $q->whereDate('appointment_date', $date))
-            // Upcoming/pending first, then most recent.
-            ->orderByRaw("CASE WHEN status = 'Pending' THEN 0 WHEN status = 'Confirmed' THEN 1 ELSE 2 END")
-            ->orderBy('appointment_date', 'asc')
+            ->latest()
+            ->orderByDesc('id')
             ->paginate(25)
             ->withQueryString();
 
-        $counts = Appointment::selectRaw('status, count(*) as total')
-            ->groupBy('status')
-            ->pluck('total', 'status');
-
-        return view('appointments.index', compact('appointments', 'search', 'status', 'date', 'counts'));
+        return view('appointments.index', compact('appointments', 'search', 'status', 'date'));
     }
 
     public function update(Request $request, Appointment $appointment)

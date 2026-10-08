@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div class="w-full mx-auto space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Create New Transaction</h2>
+        <div class="ui-page-header">
+            <h2 class="ui-page-title">Create New Transaction</h2>
             @if(request('report_id'))
                 <a href="{{ route('services.show', request('report_id')) }}"
                     class="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-white flex items-center transition-colors">
@@ -31,29 +31,35 @@
         'id' => $r->id,
         'labor' => $r->details ? $r->details->labor : 0,
         'materials' => $r->details ? $r->details->parts_total_charge : 0,
-        'delivery' => $r->details ? $r->details->pullout_delivery : 0
+        'delivery' => $r->details ? $r->details->pullout_delivery : 0,
+        'miscellaneous' => $r->details ? $r->details->miscellaneous_cost : 0
     ];
 })) }},
             selectedReportId: '{{ old('report_id', request('report_id')) }}',
             labor: {{ old('labor', 0) }},
             materials: {{ old('materials', 0) }},
             delivery: {{ old('delivery', 0) }},
+            miscellaneous: 0,
             payment_status: '{{ old('payment_status', 'Paid') }}',
             total_amount: 0,
             calculateTotal() {
-                this.total_amount = ((parseFloat(this.labor) || 0) + (parseFloat(this.materials) || 0) + (parseFloat(this.delivery) || 0)).toFixed(2);
+                this.total_amount = ((parseFloat(this.labor) || 0) + (parseFloat(this.materials) || 0) + (parseFloat(this.delivery) || 0) + (parseFloat(this.miscellaneous) || 0)).toFixed(2);
             },
             init() {
+                const selectedReport = this.reports.find(r => r.id == this.selectedReportId);
+                this.miscellaneous = selectedReport ? selectedReport.miscellaneous : 0;
                 this.$watch('selectedReportId', (value) => {
                     const report = this.reports.find(r => r.id == value);
                     if (report) {
                         this.labor = report.labor;
                         this.materials = report.materials;
                         this.delivery = report.delivery;
+                        this.miscellaneous = report.miscellaneous;
                     } else {
                         this.labor = 0;
                         this.materials = 0;
                         this.delivery = 0;
+                        this.miscellaneous = 0;
                     }
                     this.calculateTotal();
                 });
@@ -61,6 +67,7 @@
                 this.$watch('labor', () => this.calculateTotal());
                 this.$watch('materials', () => this.calculateTotal());
                 this.$watch('delivery', () => this.calculateTotal());
+                this.$watch('miscellaneous', () => this.calculateTotal());
                 
                 // Trigger initial load if report_id exists
                 if(this.selectedReportId && !{{ old('labor') ? 'true' : 'false' }}) {
@@ -101,7 +108,7 @@
                             @enderror
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                             <!-- Labor Cost -->
                             <div>
                                 <label for="labor" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Labor Cost</label>
@@ -151,6 +158,19 @@
                                 @error('delivery')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                            </div>
+
+                            <!-- Miscellaneous Cost -->
+                            <div>
+                                <label for="miscellaneous_cost" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Miscellaneous Cost</label>
+                                <div class="mt-1 relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 dark:text-slate-400 sm:text-sm">&#8369;</span>
+                                    </div>
+                                    <input type="number" id="miscellaneous_cost" step="0.01" x-model="miscellaneous" readonly
+                                        class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 sm:text-sm border-gray-300 dark:border-slate-500 rounded-lg"
+                                        placeholder="0.00">
+                                </div>
                             </div>
                         </div>
 
@@ -234,6 +254,7 @@
                                     <option value="">Select Method</option>
                                     <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>Cash</option>
                                     <option value="GCash" {{ old('payment_method') == 'GCash' ? 'selected' : '' }}>GCash</option>
+                                    <option value="Card" {{ old('payment_method') == 'Card' ? 'selected' : '' }}>Card</option>
                                     <option value="PayMaya" {{ old('payment_method') == 'PayMaya' ? 'selected' : '' }}>PayMaya</option>
                                     <option value="Bank Transfer" {{ old('payment_method') == 'Bank Transfer' ? 'selected' : '' }}>Bank Transfer</option>
                                     <option value="Check" {{ old('payment_method') == 'Check' ? 'selected' : '' }}>Check</option>

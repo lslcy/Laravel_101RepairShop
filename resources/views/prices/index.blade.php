@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="space-y-6">
+    <div class="ui-page">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="ui-page-header">
             <div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Service Prices</h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">Manage pricing for different service types</p>
+                <h2 class="ui-page-title">Service Prices</h2>
+                <p class="ui-page-subtitle">Manage pricing for different service types</p>
             </div>
             <a href="{{ route('prices.create') }}"
                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
@@ -36,7 +36,7 @@
             </div>
         @else
             <!-- Search -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
+            <div class="ui-card p-4">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@
             <!-- Table -->
             <div class="ui-card overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="ui-table">
                         <thead class="bg-gray-50 dark:bg-slate-700/50">
                             <tr>
                                 <th scope="col"
