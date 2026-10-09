@@ -25,7 +25,7 @@
                         <div>
                             <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-slate-200">First Name</label>
                             <input type="text" name="first_name" id="first_name"
-                                value="{{ old('first_name', $customer->first_name) }}" required
+                                value="{{ old('first_name', $customer->first_name) }}" required maxlength="255" autocomplete="given-name"
                                 class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             @error('first_name')
                                 <p class="mt-1 text-sm text-red-600 flex items-center">
@@ -42,7 +42,7 @@
                         <div>
                             <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Last Name</label>
                             <input type="text" name="last_name" id="last_name"
-                                value="{{ old('last_name', $customer->last_name) }}" required
+                                value="{{ old('last_name', $customer->last_name) }}" required maxlength="255" autocomplete="family-name"
                                 class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             @error('last_name')
                                 <p class="mt-1 text-sm text-red-600 flex items-center">
@@ -111,8 +111,8 @@
                                         </path>
                                     </svg>
                                 </div>
-                                <input type="text" name="phone_no" id="phone_no"
-                                    value="{{ old('phone_no', $customer->phone_no) }}" required
+                                <input type="tel" name="phone_no" id="phone_no"
+                                    value="{{ old('phone_no', $customer->phone_no) }}" required autocomplete="tel"
                                     class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-slate-500 rounded-lg">
                             </div>
                             @error('phone_no')
@@ -136,11 +136,12 @@
                                     <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300">Not linked</span>
                                 @endif
                             </label>
-                            <input type="text" name="auth_id" id="auth_id" value="{{ old('auth_id', $customer->auth_id) }}"
+                            <input type="text" name="auth_id" id="auth_id" value="{{ $customer->auth_id ?: old('auth_id') }}"
+                                @readonly($customer->auth_id)
                                 class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm font-mono"
                                 placeholder="e.g. 3f1c2a9e-0000-0000-0000-000000000000">
                             <p class="mt-1 text-xs text-gray-500 dark:text-slate-400">
-                                The customer's Supabase Auth user ID. It is filled automatically when the customer signs in on the mobile app with the same email. Clear it to unlink the account.
+                                Each customer can have one mobile account. The ID is linked automatically when the customer signs up or signs in with the matching email or phone number. An existing account link cannot be changed or cleared.
                             </p>
                             @error('auth_id')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

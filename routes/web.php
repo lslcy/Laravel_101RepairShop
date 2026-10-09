@@ -12,6 +12,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CustomerPaymentReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -42,6 +43,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/appointments/{appointment}/convert', [AppointmentController::class , 'convert'])->name('appointments.convert');
 
     Route::middleware(['can:admin-only'])->group(function () {
+            // Receipt evidence and QR settings are available only to administrators.
+            Route::get('/customer-payments', [CustomerPaymentReviewController::class, 'index'])->name('customer-payments.index');
+            Route::get('/customer-payments/settings', [CustomerPaymentReviewController::class, 'editSettings'])->name('customer-payments.settings.edit');
+            Route::put('/customer-payments/settings', [CustomerPaymentReviewController::class, 'updateSettings'])->name('customer-payments.settings.update');
+            Route::get('/customer-payments/{submission}', [CustomerPaymentReviewController::class, 'show'])->whereUuid('submission')->name('customer-payments.show');
+            Route::get('/customer-payments/{submission}/receipt', [CustomerPaymentReviewController::class, 'receipt'])->whereUuid('submission')->name('customer-payments.receipt');
+            Route::post('/customer-payments/{submission}/review', [CustomerPaymentReviewController::class, 'review'])->whereUuid('submission')->name('customer-payments.review');
             Route::resource('prices', ServicePriceController::class);
             // Archive Routes
             Route::get('/archive', [ArchiveController::class , 'index'])->name('archive.index');

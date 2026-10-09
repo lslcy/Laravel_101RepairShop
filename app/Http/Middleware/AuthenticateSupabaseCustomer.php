@@ -3,9 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Models\Customer;
+use App\Support\CustomerIdentity;
 use Closure;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,8 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * The token is verified against Supabase's /auth/v1/user endpoint, then the
  * matching row in `customers` is resolved through `customers.auth_id`.
- * If no row is linked yet, an unlinked customer with the same email is
- * linked automatically (covers customers first registered at the counter).
+ * A verified email or phone can link a single active counter-created profile.
+ * Archived records and established account links cannot be claimed again.
  */
 class AuthenticateSupabaseCustomer
 {
@@ -53,14 +56,39 @@ class AuthenticateSupabaseCustomer
             return response()->json(['message' => 'Invalid or expired token.'], 401);
         }
 
-        $customer = Customer::where('auth_id', $authUser['id'])->first();
+        try {
+            $customer = DB::transaction(function () use ($authUser) {
+                $linked = Customer::withTrashed()->where('auth_id', $authUser['id'])->lockForUpdate()->limit(2)->get();
+                if ($linked->isNotEmpty()) {
+                    return $linked->count() === 1 && !$linked->first()->trashed() ? $linked->first() : null;
+                }
 
-        if (!$customer && !empty($authUser['email'])) {
-            $customer = Customer::whereNull('auth_id')
-                ->whereRaw('lower(email) = ?', [strtolower($authUser['email'])])
-                ->first();
+                $email = !empty($authUser['email_confirmed_at']) ? CustomerIdentity::emailKey($authUser['email'] ?? null) : null;
+                $phone = !empty($authUser['phone_confirmed_at']) ? CustomerIdentity::phoneKey($authUser['phone'] ?? null) : null;
+                if (!$email && !$phone) {
+                    return null;
+                }
 
-            $customer?->forceFill(['auth_id' => $authUser['id']])->save();
+                $matches = Customer::withTrashed()->where(function ($query) use ($email, $phone) {
+                    if ($email) {
+                        $query->whereRaw('customer_identity_email_key(email) = ?', [$email]);
+                    }
+                    if ($phone) {
+                        $query->orWhereRaw('customer_identity_phone_key(phone_no) = ?', [$phone]);
+                    }
+                })->lockForUpdate()->limit(2)->get();
+
+                if ($matches->count() !== 1 || $matches->first()->trashed() || $matches->first()->auth_id) {
+                    return null;
+                }
+
+                $customer = $matches->first();
+                $customer->forceFill(['auth_id' => $authUser['id']])->save();
+
+                return $customer;
+            });
+        } catch (UniqueConstraintViolationException $e) {
+            return response()->json(['message' => 'This customer or mobile account is already linked. Contact the shop.'], 409);
         }
 
         if (!$customer) {

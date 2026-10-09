@@ -93,6 +93,13 @@
             </a>
         @endif
 
+        @can('admin-only')
+            <a href="{{ route('customer-payments.index') }}" class="flex min-h-[48px] items-center rounded-lg px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 {{ request()->routeIs('customer-payments.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}" @if(request()->routeIs('customer-payments.*')) aria-current="page" @endif>
+                <svg class="mr-3 h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h4M7 3h10a2 2 0 0 1 2 2v16l-3-2-4 2-4-2-3 2V5a2 2 0 0 1 2-2Z" /></svg>
+                <span class="font-medium">Customer payments</span>
+            </a>
+        @endcan
+
         <!-- Parts -->
         @if(in_array(auth()->user()->role, ['Administrator', 'Secretary']))
             <a href="{{ route('inventory.index') }}"

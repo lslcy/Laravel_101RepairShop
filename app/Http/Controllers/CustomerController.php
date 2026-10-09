@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerRequest;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class CustomerController extends Controller
 {
@@ -50,31 +53,10 @@ class CustomerController extends Controller
         return view('customers.create');
     }
 
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
         $this->checkCustomerAccess();
-        $validated = $request->validate([
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => [
-                'nullable', 'string', 'max:255',
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = \App\Models\Customer::where('first_name', $request->first_name)
-                        ->where('last_name', $value)
-                        ->exists();
-                    if ($exists) {
-                        $fail('A customer with the same first and last name already exists.');
-                    }
-                },
-            ],
-            'address' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
-            'phone_no' => 'required|numeric|digits_between:7,15',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'phone_no.required' => 'The phone number is required.',
-            'phone_no.numeric' => 'The phone number must contain only numbers.',
-            'phone_no.digits_between' => 'The phone number must be between 7 and 15 digits.',
-        ]);
+        $validated = $request->validated();
 
         // Only persist validated fields (never mass-assign raw request input).
         $data = collect($validated)->except('profile_picture')->all();
@@ -84,7 +66,14 @@ class CustomerController extends Controller
             $data['profile_picture'] = 'storage/' . $path;
         }
 
-        \App\Models\Customer::create($data);
+        try {
+            \App\Models\Customer::create($data);
+        } catch (UniqueConstraintViolationException $e) {
+            if (isset($path)) {
+                Storage::disk('public')->delete($path);
+            }
+            $this->duplicateIdentity($e);
+        }
 
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
@@ -105,53 +94,54 @@ class CustomerController extends Controller
         return view('customers.edit', compact('customer'));
     }
 
-    public function update(Request $request, \App\Models\Customer $customer)
+    public function update(CustomerRequest $request, \App\Models\Customer $customer)
     {
         $this->checkCustomerAccess();
-        $validated = $request->validate([
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => [
-                'nullable', 'string', 'max:255',
-                function ($attribute, $value, $fail) use ($request, $customer) {
-                    $exists = \App\Models\Customer::where('first_name', $request->first_name)
-                        ->where('last_name', $value)
-                        ->where('id', '!=', $customer->id)
-                        ->exists();
-                    if ($exists) {
-                        $fail('A customer with the same first and last name already exists.');
-                    }
-                },
-            ],
-            'address' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
-            // Supabase auth.users id of the customer's mobile account.
-            'auth_id' => ['nullable', 'uuid', Rule::unique('customers', 'auth_id')->ignore($customer->id)],
-            'phone_no' => 'required|numeric|digits_between:7,15',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'phone_no.required' => 'The phone number is required.',
-            'phone_no.numeric' => 'The phone number must contain only numbers.',
-            'phone_no.digits_between' => 'The phone number must be between 7 and 15 digits.',
-            'auth_id.uuid' => 'The mobile account ID must be a valid UUID from Supabase Auth.',
-            'auth_id.unique' => 'This mobile account is already linked to another customer.',
-        ]);
+        $validated = $request->validated();
 
         $data = collect($validated)->except('profile_picture')->all();
 
+        $oldPath = null;
         if ($request->hasFile('profile_picture')) {
             if ($customer->profile_picture && !str_starts_with($customer->profile_picture, 'http')) {
                 $oldPath = str_replace('storage/', '', $customer->profile_picture);
-                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($oldPath)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
-                }
             }
             $path = $request->file('profile_picture')->store('customer-profiles', 'public');
             $data['profile_picture'] = 'storage/' . $path;
         }
 
-        $customer->update($data);
+        try {
+            $customer->update($data);
+        } catch (UniqueConstraintViolationException $e) {
+            if (isset($path)) {
+                Storage::disk('public')->delete($path);
+            }
+            $this->duplicateIdentity($e);
+        }
+
+        if ($oldPath) {
+            Storage::disk('public')->delete($oldPath);
+        }
 
         return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
+    }
+
+    private function duplicateIdentity(UniqueConstraintViolationException $exception): never
+    {
+        // A concurrent request may pass validation before another request saves the same identity.
+        $messages = [
+            'customers_identity_name_unique' => ['last_name', 'A customer with this full name already exists. Use the existing customer record.'],
+            'customers_identity_email_unique' => ['email', 'This email address is already used by a customer.'],
+            'customers_identity_phone_unique' => ['phone_no', 'This phone number is already used by a customer.'],
+            'customers_identity_auth_unique' => ['auth_id', 'This mobile account is already linked to another customer.'],
+        ];
+        foreach ($messages as $constraint => [$field, $message]) {
+            if (str_contains($exception->getMessage(), $constraint) || str_contains($exception->getMessage(), explode('. ', $message)[0])) {
+                throw ValidationException::withMessages([$field => $message]);
+            }
+        }
+
+        throw $exception;
     }
 
     public function destroy(\App\Models\Customer $customer)

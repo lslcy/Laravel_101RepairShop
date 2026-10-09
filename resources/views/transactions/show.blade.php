@@ -15,6 +15,22 @@
             </div>
         </div>
 
+        @can('admin-only')
+            @if($pendingSubmission ?? null)
+                <section class="ui-card border-amber-300 p-5 dark:border-amber-700" aria-labelledby="pending-receipt-heading">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 id="pending-receipt-heading" class="font-semibold">GCash receipt pending review</h2>
+                            <p class="mt-2 text-sm text-gray-600 dark:text-slate-300">The customer submitted a receipt for ₱{{ number_format((float) $pendingSubmission->amount, 2) }}. Verify it before recording this balance as paid.</p>
+                        </div>
+                        <a href="{{ route('customer-payments.show', $pendingSubmission) }}" class="inline-flex min-h-[48px] shrink-0 items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900">Review receipt</a>
+                    </div>
+                </section>
+            @elseif(isset($paymentReviewAvailable) && !$paymentReviewAvailable)
+                <div role="status" class="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">Customer receipt review has not been set up yet. This transaction can still be managed here.</div>
+            @endif
+        @endcan
+
         <!-- Details Card -->
         <div class="ui-card overflow-hidden">
             <div class="p-6">

@@ -15,6 +15,12 @@
                 <p class="ui-page-subtitle">View and manage financial transactions</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
+                @can('admin-only')
+                    <a href="{{ route('customer-payments.index') }}" class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg border border-blue-300 px-4 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-slate-700">
+                        <svg class="h-5 w-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h4M7 3h10a2 2 0 0 1 2 2v16l-3-2-4 2-4-2-3 2V5a2 2 0 0 1 2-2Z" /></svg>
+                        Review customer receipts
+                    </a>
+                @endcan
                 <button onclick="window.print()"
                     class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                     <svg class="w-5 h-5 mr-2 -ml-1 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,6 +41,12 @@
                 @endif
             </div>
         </div>
+
+        @can('admin-only')
+            @if(isset($paymentReviewAvailable) && !$paymentReviewAvailable)
+                <div role="status" class="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 print:hidden dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">Customer receipt review has not been set up yet. Existing transactions remain available.</div>
+            @endif
+        @endcan
 
         <!-- Filters & Search (Always Visible) -->
         <div class="ui-card p-4 print:hidden">
@@ -173,6 +185,14 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <x-status-badge :status="$transaction->payment_status" />
+                                        @can('admin-only')
+                                            @if(isset($pendingSubmissions[$transaction->id]))
+                                                <a href="{{ route('customer-payments.show', $pendingSubmissions[$transaction->id]) }}" class="mt-2 flex min-h-[48px] items-center gap-2 rounded-lg px-2 text-sm font-medium text-amber-800 hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-amber-200 dark:hover:bg-slate-700">
+                                                    <svg class="h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                                    Receipt pending review
+                                                </a>
+                                            @endif
+                                        @endcan
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                                         {{ $transaction->payment_date ? \Carbon\Carbon::parse($transaction->payment_date)->format('M d, Y') : '—' }}

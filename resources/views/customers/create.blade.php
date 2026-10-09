@@ -19,12 +19,14 @@
                 <form action="{{ route('customers.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
 
+                    <p class="text-sm text-gray-500 dark:text-slate-400">Use one customer record per person. Full names, phone numbers, and email addresses must be unique.</p>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- First Name -->
                         <div>
                             <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-slate-200">First Name</label>
                             <input type="text" name="first_name" id="first_name" value="{{ old('first_name') }}"
-                                required
+                                required maxlength="255" autocomplete="given-name"
                                 class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             @error('first_name')
                                 <p class="mt-1 text-sm text-red-600 flex items-center">
@@ -40,7 +42,7 @@
                         <!-- Last Name -->
                         <div>
                             <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-slate-200">Last Name</label>
-                            <input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" required
+                            <input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" required maxlength="255" autocomplete="family-name"
                                 class="mt-1 block w-full rounded-lg border-gray-300 dark:border-slate-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             @error('last_name')
                                 <p class="mt-1 text-sm text-red-600 flex items-center">
@@ -103,7 +105,7 @@
                                         </path>
                                     </svg>
                                 </div>
-                                <input type="text" name="phone_no" id="phone_no" value="{{ old('phone_no') }}" required
+                                <input type="tel" name="phone_no" id="phone_no" value="{{ old('phone_no') }}" required autocomplete="tel"
                                     class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-slate-500 rounded-lg"
                                     placeholder="09xxxxxxxxx">
                             </div>

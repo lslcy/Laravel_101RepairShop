@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use App\Services\PayMongoPaymentService;
+use App\Models\CustomerPaymentSubmission;
+use Illuminate\Support\Facades\Schema;
 
 class TransactionController extends Controller
 {
@@ -100,7 +102,15 @@ class TransactionController extends Controller
             ->paginate(25)
             ->withQueryString();
 
-        return view('transactions.index', compact('transactions', 'search', 'date', 'status', 'receivedBy'));
+        $paymentReviewAvailable = Schema::hasTable('customer_payment_submissions');
+        $pendingSubmissions = collect();
+        if ($paymentReviewAvailable && $transactions->count() > 0) {
+            $pendingSubmissions = CustomerPaymentSubmission::query()
+                ->whereIn('transaction_id', $transactions->getCollection()->pluck('id'))
+                ->where('method', 'gcash')->where('status', 'pending')
+                ->get()->keyBy('transaction_id');
+        }
+        return view('transactions.index', compact('transactions', 'search', 'date', 'status', 'receivedBy', 'paymentReviewAvailable', 'pendingSubmissions'));
     }
 
     public function create()
@@ -210,7 +220,12 @@ class TransactionController extends Controller
     public function show(\App\Models\Transaction $transaction)
     {
         $this->checkTransactionAccess();
-        return view('transactions.show', compact('transaction'));
+        $paymentReviewAvailable = Schema::hasTable('customer_payment_submissions');
+        $pendingSubmission = $paymentReviewAvailable
+            ? CustomerPaymentSubmission::query()->where('transaction_id', $transaction->id)
+                ->where('method', 'gcash')->where('status', 'pending')->first()
+            : null;
+        return view('transactions.show', compact('transaction', 'paymentReviewAvailable', 'pendingSubmission'));
     }
 
     public function edit(\App\Models\Transaction $transaction)
