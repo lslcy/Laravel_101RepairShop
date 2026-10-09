@@ -7,6 +7,18 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Repair shop database setup
+
+This application shares its Supabase PostgreSQL database with the Flutter app. Copy `.env.example` to `.env` if needed, then obtain the exact host and username from **Supabase Connect > Session pooler**. Set `DB_CONNECTION=pgsql`, `DB_PORT=5432`, `DB_DATABASE=postgres`, your database password, and `DB_SSLMODE=require`. Keep `DB_URL` unset when configuring separate `DB_*` fields because it overrides them.
+
+The Session pooler works on IPv4 networks. Direct connections using `db.<project-ref>.supabase.co` require IPv6 connectivity or Supabase's paid IPv4 add-on. A “could not translate host name” error occurs before authentication; verify that the host matches the Session pooler settings and resolves on the machine running Laravel. See the [official Supabase Laravel guide](https://supabase.com/docs/guides/getting-started/quickstarts/laravel).
+
+After editing `.env`, clear cached configuration and restart the Laravel server:
+
+```powershell
+php artisan config:clear
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
