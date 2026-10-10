@@ -6,9 +6,6 @@
                 <h2 class="ui-page-title">
                     Settings
                 </h2>
-                <p class="ui-page-subtitle">
-                    Manage your account settings and preferences.
-                </p>
             </div>
         </div>
 

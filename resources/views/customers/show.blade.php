@@ -4,7 +4,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">{{ $customer->first_name }} {{ $customer->last_name }}</h2>
-                <p class="ui-page-subtitle">Customer Profile</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('customers.index') }}"

@@ -4,7 +4,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">All Notifications</h2>
-                <p class="ui-page-subtitle">View your recent notifications and activity alerts</p>
             </div>
             @if(auth()->user()->unreadNotifications->count() > 0)
             <form action="{{ route('notifications.markRead') }}" method="POST">

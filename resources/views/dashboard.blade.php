@@ -38,7 +38,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">Dashboard</h2>
-                <p class="ui-page-subtitle">Your shop's activity, payments, and requests at a glance.</p>
             </div>
             @if($canManageAppointments)
                 <a href="{{ route('services.create') }}" class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900">

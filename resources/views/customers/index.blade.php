@@ -4,8 +4,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">Customer Management</h2>
-                <p class="ui-page-subtitle">Manage your customer information and records
-                </p>
             </div>
             @if(auth()->user()->role === 'Administrator')
                 <a href="{{ route('customers.create') }}"

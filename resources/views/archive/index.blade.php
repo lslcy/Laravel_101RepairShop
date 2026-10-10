@@ -13,7 +13,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">Archive Records</h2>
-                <p class="ui-page-subtitle">View and restore archived items</p>
             </div>
         </div>
 

@@ -4,7 +4,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">Appointments</h2>
-                <p class="ui-page-subtitle">Bookings made by customers from the mobile app</p>
             </div>
         </div>
 

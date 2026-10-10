@@ -3,7 +3,6 @@
         <div class="ui-page-header">
             <div>
                 <h1 class="ui-page-title">Customer payments</h1>
-                <p class="ui-page-subtitle">Review GCash receipts before recording a payment as paid.</p>
             </div>
             <a href="{{ route('customer-payments.settings.edit') }}"
                 class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">

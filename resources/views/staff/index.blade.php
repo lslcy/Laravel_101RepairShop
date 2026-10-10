@@ -4,7 +4,6 @@
         <div class="ui-page-header">
             <div>
                 <h2 class="ui-page-title">User Management</h2>
-                <p class="ui-page-subtitle">Manage team members and their roles</p>
             </div>
             <a href="{{ route('staff.create') }}"
                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">

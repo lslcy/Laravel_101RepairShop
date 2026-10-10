@@ -12,7 +12,6 @@
         <div class="ui-page-header print:hidden">
             <div>
                 <h2 class="ui-page-title">Transactions</h2>
-                <p class="ui-page-subtitle">View and manage financial transactions</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
                 @can('admin-only')

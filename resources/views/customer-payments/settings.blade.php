@@ -3,7 +3,6 @@
         <div class="ui-page-header">
             <div>
                 <h1 class="ui-page-title">GCash QR settings</h1>
-                <p class="ui-page-subtitle">Choose the QR image customers see when paying through the app.</p>
             </div>
             <a href="{{ route('customer-payments.index') }}" class="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-600 dark:hover:bg-slate-700">Back to payments</a>
         </div>

@@ -149,8 +149,8 @@ class CustomerPaymentReviewService
 
     public function storageConfigured(): bool
     {
-        $url = (string) config('services.supabase.url');
-        $key = (string) config('services.supabase.service_key');
+        $url = trim((string) config('services.supabase.url'));
+        $key = trim((string) config('services.supabase.service_key'));
 
         return $key !== '' && filter_var($url, FILTER_VALIDATE_URL)
             && parse_url($url, PHP_URL_SCHEME) === 'https'

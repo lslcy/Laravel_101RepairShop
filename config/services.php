@@ -40,7 +40,8 @@ return [
         'url' => env('SUPABASE_URL'),
         'anon_key' => env('SUPABASE_ANON_KEY'),
         // Server-only access to private payment receipts and merchant QR uploads.
-        'service_key' => env('SUPABASE_SERVICE_ROLE_KEY'),
+        // Support both the standard Supabase name and the shorter alias many setups use.
+        'service_key' => env('SUPABASE_SERVICE_ROLE_KEY', env('SUPABASE_SERVICE_KEY')),
         'storage_timeout' => env('SUPABASE_STORAGE_TIMEOUT', 15),
     ],
 

@@ -17,9 +17,6 @@
                     <div class="mt-4 sm:mt-12 sm:ml-2 flex flex-col pt-1">
                         <h1 class="ui-page-title">{{ $user->name }}</h1>
 
-                        <p class="ui-page-subtitle max-w-xl">
-                            {{ $user->bio ?? 'Experienced professional managing operations.' }}
-                        </p>
                     </div>
                 </div>
                 <div class="mt-4 sm:mt-0 mb-1">
